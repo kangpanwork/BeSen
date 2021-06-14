@@ -1,6 +1,5 @@
 package beSen.mysql;
 
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +23,6 @@ import java.util.List;
  * SHOW PARAMETER service_names;
  */
 @Configuration
-@Data
 @ConditionalOnBean(MysqlConConfig.class)
 public class BsMysql implements SimpleExecutor{
 

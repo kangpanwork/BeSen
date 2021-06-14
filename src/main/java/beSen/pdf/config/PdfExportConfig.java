@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConfigurationProperties
-@Data
 public class PdfExportConfig {
 
     /**
@@ -24,4 +23,20 @@ public class PdfExportConfig {
      */
     @Value("${pdfExport.ftlTemplate}")
     private String fltTemplate;
+
+    public String getFont() {
+        return font;
+    }
+
+    public void setFont(String font) {
+        this.font = font;
+    }
+
+    public String getFltTemplate() {
+        return fltTemplate;
+    }
+
+    public void setFltTemplate(String fltTemplate) {
+        this.fltTemplate = fltTemplate;
+    }
 }
