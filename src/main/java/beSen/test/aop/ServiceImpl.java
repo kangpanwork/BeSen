@@ -10,6 +10,7 @@ public class ServiceImpl implements IService{
 
     @Override
     public String getName() {
-        return null;
+        System.out.println("get name...");
+        return name;
     }
 }

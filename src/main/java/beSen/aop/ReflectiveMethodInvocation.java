@@ -19,6 +19,10 @@ public class ReflectiveMethodInvocation implements MethodInvocation {
         this.arguments = arguments;
     }
 
+    public Object getTarget() {
+        return target;
+    }
+
     @Override
     public Method getMethod() {
         return method;
