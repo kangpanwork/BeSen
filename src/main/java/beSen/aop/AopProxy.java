@@ -2,5 +2,5 @@ package beSen.aop;
 
 
 public interface AopProxy {
-    Object getProxy();
+    Object getProxy() throws Exception;
 }

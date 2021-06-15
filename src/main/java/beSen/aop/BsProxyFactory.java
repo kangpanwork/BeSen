@@ -3,15 +3,15 @@ package beSen.aop;
 /**
  * 代理工厂，根据 AdvisedSupport 属性  proxyTargetClass 用 JDK 代理还是 CGLIB
  */
-public class ProxyFactory {
+public class BsProxyFactory {
 
     private AdvisedSupport advisedSupport;
 
-    public ProxyFactory(AdvisedSupport advisedSupport) {
+    public BsProxyFactory(AdvisedSupport advisedSupport) {
         this.advisedSupport = advisedSupport;
     }
 
-    public Object getProxy() {
+    public Object getProxy() throws Exception{
         return createAopProxy().getProxy();
     }
 
