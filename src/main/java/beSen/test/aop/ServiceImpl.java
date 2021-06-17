@@ -8,8 +8,7 @@ public class ServiceImpl implements IService{
         this.name = name;
     }
 
-    @Override
-    public String getName() {
+    @Override public String getName() {
         System.out.println("get name...");
         return name;
     }

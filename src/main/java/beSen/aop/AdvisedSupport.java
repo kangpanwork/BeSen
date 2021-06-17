@@ -2,6 +2,9 @@ package beSen.aop;
 
 import org.aopalliance.intercept.MethodInterceptor;
 
+/**
+ * 封装AOP需要的参数，源对象，方法拦截器（用于AOP拦截，方法前置处理及方法后置处理）
+ */
 public class AdvisedSupport {
     private TargetSource targetSource;
     private MethodInterceptor methodInterceptor; // 方法拦截器

@@ -1,17 +1,25 @@
 package beSen.test.aop;
 
 import beSen.aop.AdvisedSupport;
+import beSen.aop.BsJavassist;
+import beSen.aop.BsJavassistDynamicProxy;
 import beSen.aop.CglibAopProxy;
 import beSen.aop.JavassistAopProxy;
 import beSen.aop.JdkDynamicAopProxy;
 import beSen.aop.BsProxyFactory;
 import beSen.aop.TargetSource;
+import javassist.CtClass;
+import javassist.CtMethod;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.lang.reflect.Method;
 
 public class DynamicProxyTest {
 
     private AdvisedSupport advisedSupport;
+
+    private BsJavassist bsJavassist;
 
     @Before
     public void setAdvisedSupport() {
@@ -21,6 +29,14 @@ public class DynamicProxyTest {
         TargetSource targetSource = new TargetSource(service);
         advisedSupport.setMethodInterceptor(serviceInterceptor);
         advisedSupport.setTargetSource(targetSource);
+        bsJavassist = new BsJavassist();
+        bsJavassist.setClassName("beSen.test.aop.DynamicModel");
+        bsJavassist.setField("private String name;");
+        bsJavassist.setInterfaces(IService.class.getName());
+        bsJavassist.setBody("public String getName(String name) {return name;};");
+        bsJavassist.setInsertBefore("System.out.println(\"do something before...\");");
+        bsJavassist.setInsertAfter("System.out.println(\"do something after...\");");
+
     }
 
     @Test
@@ -52,5 +68,19 @@ public class DynamicProxyTest {
     public void testJavassistAopProxy() throws Exception {
         IService proxy = (IService) new JavassistAopProxy(advisedSupport).getProxy();
         proxy.getName();
+    }
+
+    @Test
+    public void testJavassistDynamicProxy() throws Exception {
+        BsJavassistDynamicProxy bsJavassistDynamicProxy = new BsJavassistDynamicProxy(bsJavassist);
+        CtClass ctClass = bsJavassistDynamicProxy.makeClass();
+        CtMethod ctMethod = ctClass.getDeclaredMethod("getName");
+        ctMethod.insertBefore(bsJavassist.getInsertBefore());
+        ctMethod.insertAfter(bsJavassist.getInsertAfter());
+        ctClass.writeFile("../");
+        Class cls = ctClass.toClass();
+        IService proxy = (IService) cls.newInstance();
+        Method method = proxy.getClass().getMethod("getName",String.class);
+        System.out.println(method.invoke(proxy,"hello"));
     }
 }

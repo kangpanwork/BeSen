@@ -1,9 +1,5 @@
 package beSen.aop;
 
-import javassist.CtClass;
-import javassist.CtConstructor;
-import javassist.CtField;
-import javassist.CtMethod;
 
 /**
  * 用于 Javassist 创建 class 字节码
@@ -13,30 +9,27 @@ public class BsJavassist {
      * 类名
      */
     private String className;
-    /**
-     * 超类
-     */
-    private CtClass ctClass;
 
     /**
-     * 构造函数
+     * 实现的接口名
      */
-    private CtConstructor ctConstructor;
+    private String interfaces;
 
     /**
      * 属性
      */
-    private CtField ctField;
+    private String field;
 
-    /**
-     * 方法
-     */
-    private CtMethod ctMethod;
 
     /**
      * 方法名称
      */
     private String methodName;
+
+    /**
+     * 方法体
+     */
+    private String body;
 
     private String insertBefore;
 
@@ -50,36 +43,12 @@ public class BsJavassist {
         this.className = className;
     }
 
-    public CtClass getCtClass() {
-        return ctClass;
+    public String getField() {
+        return field;
     }
 
-    public void setCtClass(CtClass ctClass) {
-        this.ctClass = ctClass;
-    }
-
-    public CtConstructor getCtConstructor() {
-        return ctConstructor;
-    }
-
-    public void setCtConstructor(CtConstructor ctConstructor) {
-        this.ctConstructor = ctConstructor;
-    }
-
-    public CtField getCtField() {
-        return ctField;
-    }
-
-    public void setCtField(CtField ctField) {
-        this.ctField = ctField;
-    }
-
-    public CtMethod getCtMethod() {
-        return ctMethod;
-    }
-
-    public void setCtMethod(CtMethod ctMethod) {
-        this.ctMethod = ctMethod;
+    public void setField(String field) {
+        this.field = field;
     }
 
     public String getMethodName() {
@@ -88,6 +57,14 @@ public class BsJavassist {
 
     public void setMethodName(String methodName) {
         this.methodName = methodName;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public String getInsertBefore() {
@@ -104,5 +81,13 @@ public class BsJavassist {
 
     public void setInsertAfter(String insertAfter) {
         this.insertAfter = insertAfter;
+    }
+
+    public String getInterfaces() {
+        return interfaces;
+    }
+
+    public void setInterfaces(String interfaces) {
+        this.interfaces = interfaces;
     }
 }
