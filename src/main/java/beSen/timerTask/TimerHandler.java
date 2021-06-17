@@ -34,6 +34,8 @@ public class TimerHandler extends HttpServlet {
                 parameter.put(re.getKey(),re.getValue()[0]);
             }
             timer.runTask(parameter);
+        } else {
+            throw new IllegalArgumentException("the request url must like /servlet/service/taskName?key=value");
         }
         try {
             resp.getWriter().write("the task run success...");

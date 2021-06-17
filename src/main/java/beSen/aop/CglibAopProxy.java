@@ -23,8 +23,11 @@ public class CglibAopProxy implements AopProxy {
         return enhancer.create();
     }
     /**
-     * 注意此处的MethodInterceptor是cglib中的接口，
-     * advised中的MethodInterceptor的AOP联盟中定义的接口，因此定义此类做适配
+     * 注意此处的 MethodInterceptor 是cglib中的接口
+     * org.springframework.cglib.proxy.MethodInterceptor;
+     *
+     * AdvisedSupport 中的 MethodInterceptor 是 AOP 的
+     * org.aopalliance.intercept.MethodInterceptor;
 	 */
     private class DynamicAdvisedInterceptor implements MethodInterceptor {
 
@@ -43,6 +46,10 @@ public class CglibAopProxy implements AopProxy {
         }
     }
 
+    /**
+     * methodProxy 是 Cglib 调用
+     *
+     */
     private class CglibMethodInvocation extends ReflectiveMethodInvocation {
 
         private final MethodProxy methodProxy;
