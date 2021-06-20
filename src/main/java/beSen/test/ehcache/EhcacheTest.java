@@ -1,8 +1,6 @@
 package beSen.test.ehcache;
 
 import beSen.ehcache.BsEhcache;
-import beSen.ehcache.BusinessCacheController;
-import beSen.ehcache.BusinessController;
 import org.junit.Test;
 
 public class EhcacheTest {

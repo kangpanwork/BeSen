@@ -61,6 +61,7 @@ public class CglibAopProxy implements AopProxy {
 
         @Override
         public Object proceed() throws Throwable {
+            // CGLIB$代理的方法$0()Ljava/lang/String;
             return methodProxy.invoke(getTarget(),getArguments()); // 利用的是 CGLIB 的
         }
     }

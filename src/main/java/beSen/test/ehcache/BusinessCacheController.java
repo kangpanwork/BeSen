@@ -1,8 +1,10 @@
-package beSen.ehcache;
+package beSen.test.ehcache;
 
 import beSen.aop.AdvisedSupport;
 import beSen.aop.BsProxyFactory;
 import beSen.aop.TargetSource;
+import beSen.ehcache.BsEhcache;
+import beSen.ehcache.Ehcache;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 

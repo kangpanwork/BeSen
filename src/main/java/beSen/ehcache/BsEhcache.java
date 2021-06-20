@@ -3,10 +3,13 @@ package beSen.ehcache;
 import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.config.units.EntryUnit;
 import org.ehcache.config.units.MemoryUnit;
 import org.springframework.stereotype.Component;
+
+import java.time.Duration;
 
 @Component
 public class BsEhcache implements Ehcache {
@@ -27,7 +30,7 @@ public class BsEhcache implements Ehcache {
                 .withCache(CACHE_NAME,
                         CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class,String.class,
                                 ResourcePoolsBuilder.newResourcePoolsBuilder().heap(10, EntryUnit.ENTRIES)
-                        .offheap(1, MemoryUnit.MB))).build();
+                        .offheap(1, MemoryUnit.MB)).withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofSeconds(20)))).build();
         cacheManager.init();
     }
 

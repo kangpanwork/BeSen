@@ -30,9 +30,9 @@ public abstract class AbstractSimpleExecutor implements SimpleExecutor {
         try (ResultSet resultSet = preparedStatement.executeQuery()) {
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             int columnCount = resultSetMetaData.getColumnCount();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 T obj = cls.newInstance();
-                for (int i = 1; i < columnCount; ++i) {
+                for (int i = 1; i <= columnCount; ++i) {
                     Object value = resultSet.getObject(i);
                     String columnName = resultSetMetaData.getColumnName(i).toLowerCase();
                     if (value == null) {

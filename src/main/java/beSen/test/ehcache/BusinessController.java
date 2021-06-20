@@ -1,4 +1,7 @@
-package beSen.ehcache;
+package beSen.test.ehcache;
+
+import beSen.ehcache.BsEhcache;
+import beSen.ehcache.Ehcache;
 
 /**
  * 业务处理类，业务层跟缓存组件写在一起的话，精密耦合，依赖性强
