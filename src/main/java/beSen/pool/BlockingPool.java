@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * 创建阻塞的对象池，当没有对象可以使用的话，让客户端先阻塞
  *
- *
  * @param <T>
  */
 public interface BlockingPool<T> extends Pool<T> {

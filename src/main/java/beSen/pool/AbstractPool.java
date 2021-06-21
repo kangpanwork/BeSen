@@ -19,6 +19,7 @@ public abstract class AbstractPool<T> implements Pool<T> {
     /**
      * 对象池必须得先验证对象后才能把它放回到池里
      * 无效的话应该怎么处理（handlerInvalidReturn）
+     *
      * @param t
      */
     abstract void handlerInvalidReturn(T t);
