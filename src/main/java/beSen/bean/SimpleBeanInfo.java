@@ -26,18 +26,17 @@ public class SimpleBeanInfo implements BeanInfo {
                 String t = name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);
                 String me = method.getName();
                 String m = me.substring(3);
-                String readMethod = "";
                 if (m.equals(t)) {
                     String methodType = method.getReturnType().getSimpleName();
                     String methodName = methodType + " " + method.getName();
                     Class<?>[] classes = method.getParameterTypes();
                     for (Class c : classes) {
-                        readMethod = methodName + "(" + c.getName() + ")";
+                        methodName = methodName + "(" + c.getName() + ")";
                     }
                     if (me.contains("get")) {
-                        p.setReadMethod(readMethod);
+                        p.setReadMethod(methodName);
                     } else if (me.contains("set")) {
-                        p.setWriteMethod(readMethod);
+                        p.setWriteMethod(methodName);
                     }
                 }
             }
