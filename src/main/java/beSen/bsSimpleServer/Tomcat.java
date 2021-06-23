@@ -38,7 +38,10 @@ public class Tomcat {
                 + className.substring(1) + "Servlet";
         try {
             Class cls = Class.forName(servletName);
-            Servlet servlet = (Servlet) cls.newInstance();
+            SimpleServlet simpleServlet = new SimpleServlet();
+            Class[] args = new Class[1];
+            args[0] = Servlet.class;
+            Servlet servlet = (Servlet) cls.getDeclaredConstructor(args).newInstance(simpleServlet);
             servlet.service(request, response);
         } catch (Exception e) {
             System.out.println(e.getMessage());

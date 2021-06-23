@@ -1,14 +1,25 @@
 package beSen.bsSimpleServer;
 
-public class HelloServlet implements Servlet{
+import java.io.IOException;
 
-    private SimpleServlet simpleServlet;
+/**
+ * 装饰者
+ */
+public class HelloServlet extends AbstractSimpleServlet{
 
-    public HelloServlet() {
-        simpleServlet = new SimpleServlet();
+    private Servlet servlet;
+
+    public HelloServlet(Servlet servlet) {
+        super(servlet);
+        this.servlet = servlet;
     }
 
     public void service(SimpleRequest request, SimpleResponse response) {
-        simpleServlet.service(request,response);
+        try {
+            response.write("hello world...");
+            servlet.service(request,response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
