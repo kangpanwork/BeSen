@@ -24,7 +24,7 @@ public class SimpleServlet implements Servlet {
     public void doGet(SimpleRequest request, SimpleResponse response) {
         try {
 
-            response.write("核心组件处理..." + request.getUrl());
+            response.write("write" + request.getUrl());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -33,7 +33,7 @@ public class SimpleServlet implements Servlet {
 
     public void doPost(SimpleRequest request, SimpleResponse response) {
         try {
-            response.write("核心组件处理..." + request.getUrl());
+            response.write("write" + request.getUrl());
         } catch (IOException e) {
             e.printStackTrace();
         }

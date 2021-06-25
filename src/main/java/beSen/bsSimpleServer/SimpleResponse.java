@@ -3,6 +3,7 @@ package beSen.bsSimpleServer;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 public class SimpleResponse {
 
@@ -14,15 +15,14 @@ public class SimpleResponse {
 
     public void write(String content) throws IOException {
         StringBuilder stringBuilder = new StringBuilder(128);
-        stringBuilder
-                .append("HTTP/1.1 200 ")
-                .append("\r\n")
-                .append("Content-Type:text/html")
-                .append("\r\n")
+        String tailPad = "\r\n";
+        stringBuilder.append("HTTP/1.1 200 ").append(tailPad)
+                .append("Content-Type:text/html").append(tailPad)
+                .append(tailPad)
                 .append("<html><body>")
                 .append(content)
                 .append("</body></html>");
-        outputStream.write(stringBuilder.toString().getBytes());
+        outputStream.write(stringBuilder.toString().getBytes(Charset.forName("UTF-8")));
     }
 
 }
