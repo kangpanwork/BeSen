@@ -23,7 +23,6 @@ public class SimpleResponse {
                 .append(content)
                 .append("</body></html>");
         outputStream.write(stringBuilder.toString().getBytes());
-        outputStream.close();
     }
 
 }

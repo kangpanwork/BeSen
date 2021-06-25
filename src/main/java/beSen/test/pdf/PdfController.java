@@ -2,7 +2,7 @@ package beSen.test.pdf;
 
 import beSen.pdf.config.PdfExportConfig;
 import beSen.pdf.util.PDFUtil;
-import beSen.test.model.Student;
+import beSen.test.pdf.model.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

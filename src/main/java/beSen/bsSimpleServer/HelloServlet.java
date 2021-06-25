@@ -15,11 +15,7 @@ public class HelloServlet extends AbstractSimpleServlet{
     }
 
     public void service(SimpleRequest request, SimpleResponse response) {
-        try {
-            response.write("hello world...");
+            System.out.println("hello world...");
             servlet.service(request,response);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

@@ -44,9 +44,11 @@ public class SimpleServlet implements Servlet {
         switch (request.getMethod()) {
             case "GET": {
                 doGet(request, response);
+                break;
             }
             case "POST": {
                 doPost(request, response);
+                break;
             }
         }
     }

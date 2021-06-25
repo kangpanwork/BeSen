@@ -26,6 +26,7 @@ public class Tomcat {
                 InputStream inputStream = socket.getInputStream();
                 OutputStream outputStream = socket.getOutputStream();
                 doService(new SimpleRequest(inputStream), new SimpleResponse(outputStream));
+                socket.close();
             }
         } catch (IOException e) {
         }

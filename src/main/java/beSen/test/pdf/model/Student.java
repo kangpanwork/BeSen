@@ -1,4 +1,4 @@
-package beSen.test.model;
+package beSen.test.pdf.model;
 
 import lombok.Data;
 
