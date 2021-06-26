@@ -19,7 +19,7 @@ public class SimpleResponse {
         stringBuilder.append("HTTP/1.1 200 ").append(tailPad)
                 .append("Content-Type:text/html").append(tailPad)
                 .append(tailPad)
-                .append("<html><body>")
+                .append("<html><head><meta charset=\"UTF-8\"></head><body>")
                 .append(content)
                 .append("</body></html>");
         outputStream.write(stringBuilder.toString().getBytes(Charset.forName("UTF-8")));

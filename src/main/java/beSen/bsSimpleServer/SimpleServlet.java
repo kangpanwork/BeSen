@@ -24,7 +24,7 @@ public class SimpleServlet implements Servlet {
     public void doGet(SimpleRequest request, SimpleResponse response) {
         try {
 
-            response.write("write" + request.getUrl());
+            response.write("中文乱码" + request.getUrl());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -33,7 +33,7 @@ public class SimpleServlet implements Servlet {
 
     public void doPost(SimpleRequest request, SimpleResponse response) {
         try {
-            response.write("write" + request.getUrl());
+            response.write("中文乱码" + request.getUrl());
         } catch (IOException e) {
             e.printStackTrace();
         }
