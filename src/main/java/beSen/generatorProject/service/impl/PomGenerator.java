@@ -8,7 +8,7 @@ import java.io.File;
 /**
  * pom 文件生成
  */
-public class PomGenerator extends AbstractProjectGenerator implements IProjectGenerator {
+public class PomGenerator extends AbstractProjectGenerator {
 
     private ProjectInfo projectInfo;
 
@@ -19,7 +19,7 @@ public class PomGenerator extends AbstractProjectGenerator implements IProjectGe
     @Override
     public void generator() throws Exception {
         // pom 文件位置
-        File file = new File(generatorFilePath,"pom.xml");
+        File file = new File(generatorFilePath, "pom.xml");
         writeFile(file, "pom.ftl", projectInfo);
     }
 }

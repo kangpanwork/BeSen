@@ -5,7 +5,7 @@ import beSen.generatorProject.service.IProjectGenerator;
 
 import java.io.File;
 
-public class ApplicationGenerator extends AbstractProjectGenerator implements IProjectGenerator {
+public class ApplicationGenerator extends AbstractProjectGenerator {
 
     private ApplicationInfo applicationInfo;
 
@@ -16,7 +16,7 @@ public class ApplicationGenerator extends AbstractProjectGenerator implements IP
     @Override
     public void generator() throws Exception {
         // 启动类文件位置
-        File file = new File(generatorFilePath,applicationInfo.getClassName() + ".java");
+        File file = new File(generatorFilePath, applicationInfo.getClassName() + ".java");
         writeFile(file, "application.ftl", applicationInfo);
     }
 }
