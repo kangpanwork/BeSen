@@ -3,7 +3,9 @@ package beSen.aop;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
+import org.springframework.cglib.proxy.NoOp;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 public class CglibAopProxy implements AopProxy {
@@ -21,6 +23,23 @@ public class CglibAopProxy implements AopProxy {
         enhancer.setInterfaces(advisedSupport.getTargetSource().getTargetClass());
         enhancer.setCallback(new DynamicAdvisedInterceptor(advisedSupport));
         return enhancer.create();
+    }
+
+    public Object getProxy(Class cls, Constructor constructor,Object[] args) {
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(cls);
+        enhancer.setCallback(new NoOp(){
+            @Override
+            public int hashCode() {
+                return super.hashCode();
+            }
+        });
+        // 不带参数的构造函数
+        if(constructor == null) {
+            return enhancer.create();
+        }
+        // 带参数的构造函数
+        return enhancer.create(constructor.getParameterTypes(),args);
     }
     /**
      * 注意此处的 MethodInterceptor 是cglib中的接口
