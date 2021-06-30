@@ -20,8 +20,7 @@ public class JavassistSubclassingInstantiationStrategy implements InstantiationS
         try {
             ProxyFactory proxyFactory = new ProxyFactory();
             Class proxyClass = proxyFactory.createClass();
-            ProxyObject proxyObject = null;
-            proxyObject = (ProxyObject) proxyClass.getDeclaredConstructor(ctor.getParameterTypes()).newInstance(args);
+            ProxyObject proxyObject = (ProxyObject) proxyClass.getDeclaredConstructor(ctor.getParameterTypes()).newInstance(args);
             proxyObject.setHandler(new JavassistMethodHandler());
             return proxyObject;
         } catch (Exception e) {
