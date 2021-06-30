@@ -1,4 +1,4 @@
-package beSen.bean.design2;
+package beSen.bean.singleton;
 
 public interface SingletonBeanRegistry {
 

@@ -1,4 +1,5 @@
-package beSen.bean.design2;
+package beSen.bean.definition;
+
 
 import java.util.ArrayList;
 import java.util.List;

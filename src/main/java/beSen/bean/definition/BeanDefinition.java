@@ -1,4 +1,4 @@
-package beSen.bean.design2;
+package beSen.bean.definition;
 
 /**
  * 包装 bean类型及属性 的类

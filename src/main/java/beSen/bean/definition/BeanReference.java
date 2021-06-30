@@ -1,4 +1,4 @@
-package beSen.bean.design2;
+package beSen.bean.definition;
 
 /**
  * Bean 的引用

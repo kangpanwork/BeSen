@@ -1,8 +1,7 @@
-package beSen.bean.design2;
+package beSen.bean.definition;
 
 /**
  * bean 的属性信息
- *
  */
 public class PropertyValue {
     private final String name;
