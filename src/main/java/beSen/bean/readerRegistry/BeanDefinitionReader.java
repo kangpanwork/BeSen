@@ -13,7 +13,21 @@ import beSen.bean.resource.ResourceLoader;
  */
 public interface BeanDefinitionReader {
 
+    /**
+     * 提供给子类调用
+     * @return
+     */
     BeanDefinitionRegistry getRegistry();
 
+    /**
+     * 提供给子类调用
+     * @return
+     */
     ResourceLoader getResourceLoader();
+
+    /**
+     * 核心暴露接口
+     * @param location
+     */
+    void loadBeanDefinitions(String location);
 }
