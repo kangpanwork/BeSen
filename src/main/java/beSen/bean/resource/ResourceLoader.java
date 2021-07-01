@@ -2,7 +2,7 @@ package beSen.bean.resource;
 
 
 /**
- * 资源加载
+ * 资源加载器
  */
 public interface ResourceLoader {
     String CLASSPATH_URL_PREFIX = "classpath:";

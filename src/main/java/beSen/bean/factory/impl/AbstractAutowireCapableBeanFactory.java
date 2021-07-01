@@ -7,6 +7,7 @@ import beSen.bean.definition.BeanReference;
 import beSen.bean.definition.PropertyValue;
 import beSen.bean.definition.PropertyValues;
 import beSen.bean.factory.AbstractBeanFactory;
+import cn.hutool.core.bean.BeanUtil;
 
 import java.lang.reflect.Constructor;
 
@@ -33,7 +34,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     protected Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args) {
         /**
          * 创建bean
-          */
+         */
         Object bean = createBeanInstance(beanDefinition, beanName, args);
         /**
          * 给 Bean 填充属性
@@ -65,17 +66,18 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 break;
             }
         }
-        return getInstantiationStrategy().instantiate(beanDefinition,beanName,ctor,args);
+        return getInstantiationStrategy().instantiate(beanDefinition, beanName, ctor, args);
     }
 
 
     /**
      * 然后给创建的bean 属性填充
+     *
      * @param beanName
      * @param bean
      * @param beanDefinition
      */
-    protected  void applyPropertyValues(String beanName, Object bean, BeanDefinition beanDefinition) {
+    protected void applyPropertyValues(String beanName, Object bean, BeanDefinition beanDefinition) {
         PropertyValues propertyValues = beanDefinition.getPropertyValues();
         for (PropertyValue propertyValue : propertyValues.getPropertyValues()) {
             String name = propertyValue.getName();
@@ -85,8 +87,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 String rbn = beanReference.getBeanName();
                 value = getBean(rbn);
             }
-
-
+            // 属性填充
+            BeanUtil.setFieldValue(bean, name, value);
         }
     }
 }

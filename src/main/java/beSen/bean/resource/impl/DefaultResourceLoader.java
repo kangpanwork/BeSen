@@ -2,16 +2,13 @@ package beSen.bean.resource.impl;
 
 import beSen.bean.resource.Resource;
 import beSen.bean.resource.ResourceLoader;
-import beSen.bean.resource.impl.ClassPathResource;
-import beSen.bean.resource.impl.FileSystemResource;
-import beSen.bean.resource.impl.UrlResource;
 import org.springframework.util.Assert;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * 默认资源加载器
+ * 资源加载器，提供读取资源功能
  */
 public class DefaultResourceLoader implements ResourceLoader {
     @Override

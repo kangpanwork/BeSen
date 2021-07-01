@@ -15,7 +15,9 @@ public class JdkSubclassingInstantiationStrategy implements InstantiationStrateg
 
     @Override
     public Object instantiate(BeanDefinition beanDefinition, String beanName, Constructor ctor, Object[] args) {
-        return Proxy.newProxyInstance(beanDefinition.getBeanClass().getClassLoader(),beanDefinition.getBeanClass().getInterfaces(),this);
+        Class<?>[] interfaces = new Class[]{beanDefinition.getBeanClass()};
+        return Proxy.newProxyInstance(beanDefinition.getBeanClass().getClassLoader(),interfaces,this);
+        // return Proxy.newProxyInstance(beanDefinition.getBeanClass().getClassLoader(),beanDefinition.getBeanClass().getInterfaces(),this);
     }
 
     @Override
