@@ -1,6 +1,9 @@
 package beSen.bean.readerRegistry.impl;
 
 
+import beSen.bean.definition.BeanDefinition;
+import beSen.bean.definition.BeanReference;
+import beSen.bean.definition.PropertyValue;
 import beSen.bean.registry.BeanDefinitionRegistry;
 import beSen.bean.resource.Resource;
 import beSen.bean.resource.ResourceLoader;
@@ -83,10 +86,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             //      这里也会解析，不是元素直接跳过
             //      </beans>
             // 开始解析
-            Element e = (Element) childNodes.item(i);
-            String id = e.getAttribute("id");
-            String name = e.getAttribute("name");
-            String className = e.getAttribute("class");
+            Element ele = (Element) childNodes.item(i);
+            String id = ele.getAttribute("id");
+            String name = ele.getAttribute("name");
+            String className = ele.getAttribute("class");
 
             try {
                 Class<?> clazz = Class.forName(className);
@@ -94,9 +97,42 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
                 // <bean name="userDao" class="UserDao"/> 就取name
                 // <bean class="UserDao"/> 就取class
                 String beanName = StrUtil.isNotEmpty(id) ? id : StrUtil.isNotEmpty(name) ? name : className;
+                setPropertyValue(ele,clazz,beanName);
             } catch (ClassNotFoundException classNotFoundException) {
                 classNotFoundException.printStackTrace();
             }
         }
+
+    }
+
+    /**
+     * property赋值，用于bean信息注册使用
+     *
+     * @param ele
+     */
+    private void setPropertyValue(Element ele, Class clazz, String beanName) {
+        BeanDefinition beanDefinition = new BeanDefinition(clazz);
+        NodeList childNodes = ele.getChildNodes();
+        for (int i = 0; i < childNodes.getLength(); ++i) {
+            if(!(childNodes.item(i) instanceof Element)) continue;
+            if(!"property".equals(childNodes.item(i).getNodeName())) continue;
+
+            // 开始解析
+            Element e = (Element) childNodes.item(i);
+            String name = e.getAttribute("name");
+            String value = e.getAttribute("value");
+            String ref = e.getAttribute("ref");
+
+            //        <property name="" value=""/>
+            //        <property name="" ref="userDao"/>
+            // ref 处理  有些是没有带ref的
+            Object beanValue =StrUtil.isNotEmpty(ref) ? new BeanReference(ref) : value;
+
+            // 赋值
+            PropertyValue propertyValue = new PropertyValue(name,value);
+            beanDefinition.getPropertyValues().addPropertyValue(propertyValue);
+            getRegistry().registerBeanDefinition(beanName,beanDefinition);
+        }
+
     }
 }
