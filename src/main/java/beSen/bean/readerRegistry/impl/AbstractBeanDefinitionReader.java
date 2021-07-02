@@ -7,8 +7,8 @@ import beSen.bean.resource.impl.DefaultResourceLoader;
 
 /**
  * BeanDefinitionReader 的实现类
- * 提供了“将bean的信息注册”这个功能
- * 提供了资源加载功能，并且初始化了 DefaultResourceLoader 这个类
+ * 提供了“将bean的信息注册”这个功能(通过获取BeanDefinitionRegistry的子类)
+ * 提供了资源加载功能，并且初始化了 DefaultResourceLoader 这个类（使用DefaultResourceLoader加载）
  *
  */
 public abstract class AbstractBeanDefinitionReader implements BeanDefinitionReader {

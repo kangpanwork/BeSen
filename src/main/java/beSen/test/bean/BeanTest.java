@@ -85,7 +85,10 @@ public class BeanTest {
         XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(factory);
         xmlBeanDefinitionReader.loadBeanDefinitions("classpath:spring.xml");
         StudentService studentService = (StudentService) factory.getBean("studentService");
-        System.out.println(studentService.getStudent());
+        beSen.test.bean.model.Student student = (beSen.test.bean.model.Student)factory.getBean("student");
+        System.out.println(student);
+        StudentDao studentDao = (StudentDao) factory.getBean("studentDao");
+        System.out.println(studentService.queryScoreLessThanThis(student));
     }
 }
 

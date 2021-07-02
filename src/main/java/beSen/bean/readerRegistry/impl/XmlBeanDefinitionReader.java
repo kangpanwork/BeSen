@@ -9,8 +9,6 @@ import beSen.bean.resource.Resource;
 import beSen.bean.resource.ResourceLoader;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.XmlUtil;
-import freemarker.template.utility.StringUtil;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -96,8 +94,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
                 // <bean id="userDao" class="UserDao"/> 就取id
                 // <bean name="userDao" class="UserDao"/> 就取name
                 // <bean class="UserDao"/> 就取class
-                String beanName = StrUtil.isNotEmpty(id) ? id : StrUtil.isNotEmpty(name) ? name : className;
-                setPropertyValue(ele,clazz,beanName);
+                String beanName = StrUtil.isNotEmpty(id) ? id : name;
+                if (StrUtil.isEmpty(beanName)) {
+                    beanName = StrUtil.lowerFirst(clazz.getSimpleName());
+                }
+                setPropertyValue(ele, clazz, beanName);
             } catch (ClassNotFoundException classNotFoundException) {
                 classNotFoundException.printStackTrace();
             }
@@ -114,8 +115,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         BeanDefinition beanDefinition = new BeanDefinition(clazz);
         NodeList childNodes = ele.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); ++i) {
-            if(!(childNodes.item(i) instanceof Element)) continue;
-            if(!"property".equals(childNodes.item(i).getNodeName())) continue;
+            if (!(childNodes.item(i) instanceof Element)) continue;
+            if (!"property".equals(childNodes.item(i).getNodeName())) continue;
 
             // 开始解析
             Element e = (Element) childNodes.item(i);
@@ -126,13 +127,13 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             //        <property name="" value=""/>
             //        <property name="" ref="userDao"/>
             // ref 处理  有些是没有带ref的
-            Object beanValue =StrUtil.isNotEmpty(ref) ? new BeanReference(ref) : value;
+            Object beanValue = StrUtil.isNotEmpty(ref) ? new BeanReference(ref) : value;
 
             // 赋值
-            PropertyValue propertyValue = new PropertyValue(name,value);
+            PropertyValue propertyValue = new PropertyValue(name, beanValue);
             beanDefinition.getPropertyValues().addPropertyValue(propertyValue);
-            getRegistry().registerBeanDefinition(beanName,beanDefinition);
         }
+        getRegistry().registerBeanDefinition(beanName, beanDefinition);
 
     }
 }

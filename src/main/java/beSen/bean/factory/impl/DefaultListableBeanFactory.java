@@ -2,6 +2,7 @@ package beSen.bean.factory.impl;
 
 import beSen.bean.definition.BeanDefinition;
 import beSen.bean.registry.BeanDefinitionRegistry;
+import beSen.bean.support.ConfigurableListableBeanFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +18,10 @@ import java.util.Map;
  *
  * DefaultListableBeanFactory组合了AbstractAutowireCapableBeanFactory功能，同时实现了根据bean名称获取bean信息方法
  * 继承了BeanDefinitionRegistry 提供了注册bean信息的功能
+ *
+ * 后期，增加了ConfigurableListableBeanFactory接口 实现它的 getBeansOfType 方法
  */
-public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry {
+public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry, ConfigurableListableBeanFactory {
     private Map<String, BeanDefinition> beanDefinitionMap = new HashMap<>();
 
     @Override
@@ -34,6 +37,19 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         }
         return beanDefinition;
     }
+
+    @Override
+    public <T> Map<String, T> getBeansOfType(Class<T> type) {
+        Map<String, T> result = new HashMap<>();
+        beanDefinitionMap.forEach((beanName, beanDefinition) -> {
+            Class beanClass = beanDefinition.getBeanClass();
+            if (type.isAssignableFrom(beanClass)) {
+                result.put(beanName, (T) getBean(beanName));
+            }
+        });
+        return result;
+    }
+
 
 
 }

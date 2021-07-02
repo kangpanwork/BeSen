@@ -1,12 +1,21 @@
 package beSen.bean.factory;
 
+import beSen.bean.aop.BeanPostProcessor;
 import beSen.bean.definition.BeanDefinition;
 import beSen.bean.singleton.DefaultSingletonBeanRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 工厂抽象化一层，主要支撑单例获取和存储
+ *
+ * 后期新增 beanPostProcessors
  */
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
+
+    /** BeanPostProcessors to apply in createBean */
+    private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
 
     /**
      * 核心
@@ -55,4 +64,11 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     public Object getBean(String name, Object... args) {
         return doGetBean(name,args);
     }
+
+    // 后期增加，为了支持前置后置处理
+    public List<BeanPostProcessor> getBeanPostProcessors() {
+        return beanPostProcessors;
+    }
+
+
 }

@@ -2,6 +2,8 @@ package beSen.bean.factory.impl;
 
 import beSen.bean.InstantiationStrategy.InstantiationStrategy;
 import beSen.bean.InstantiationStrategy.impl.CglibSubclassingInstantiationStrategy;
+import beSen.bean.aop.AutowireCapableBeanFactory;
+import beSen.bean.aop.BeanPostProcessor;
 import beSen.bean.definition.BeanDefinition;
 import beSen.bean.definition.BeanReference;
 import beSen.bean.definition.PropertyValue;
@@ -13,8 +15,10 @@ import java.lang.reflect.Constructor;
 
 /**
  * createBean 的主要实现抽象类
+ *
+ * 后期增加了AutowireCapableBeanFactory 增加前置后置处理
  */
-public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
+public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
 
     private InstantiationStrategy instantiationStrategy;
 
@@ -39,7 +43,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         /**
          * 给 Bean 填充属性
          */
-        applyPropertyValues(beanName, bean, beanDefinition);
+        applyPropertyValues(bean, beanDefinition);
+        /**
+         * 前置后置处理
+         */
+        bean = initializeBean(beanName, bean, beanDefinition);
         /**
          * 注册到单例容器里面
          */
@@ -73,22 +81,52 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     /**
      * 然后给创建的bean 属性填充
      *
-     * @param beanName
      * @param bean
      * @param beanDefinition
      */
-    protected void applyPropertyValues(String beanName, Object bean, BeanDefinition beanDefinition) {
+    protected void applyPropertyValues(Object bean, BeanDefinition beanDefinition) {
         PropertyValues propertyValues = beanDefinition.getPropertyValues();
         for (PropertyValue propertyValue : propertyValues.getPropertyValues()) {
             String name = propertyValue.getName();
             Object value = propertyValue.getValue();
             if (value instanceof BeanReference) {
+                // BeanReference 包装了，可以来标识是一个类，这样可以根据它的名字来获取实例
                 BeanReference beanReference = (BeanReference) value;
-                String rbn = beanReference.getBeanName();
-                value = getBean(rbn);
+                String beanName = beanReference.getBeanName();
+                value = getBean(beanName);
             }
             // 属性填充
             BeanUtil.setFieldValue(bean, name, value);
         }
+    }
+
+    private Object initializeBean(String beanName, Object bean, BeanDefinition beanDefinition) {
+        // 1. 执行 BeanPostProcessor Before 处理
+        Object wrappedBean = applyBeanPostProcessorsBeforeInitialization(bean, beanName);
+        // 2. 执行 BeanPostProcessor After 处理
+        wrappedBean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
+        return wrappedBean;
+    }
+
+    @Override
+    public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName) {
+        Object result = existingBean;
+        for (BeanPostProcessor processor : getBeanPostProcessors()) {
+            Object current = processor.postProcessBeforeInitialization(result, beanName);
+            if (null == current) return result;
+            result = current;
+        }
+        return result;
+    }
+
+    @Override
+    public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName) {
+        Object result = existingBean;
+        for (BeanPostProcessor processor : getBeanPostProcessors()) {
+            Object current = processor.postProcessAfterInitialization(result, beanName);
+            if (null == current) return result;
+            result = current;
+        }
+        return result;
     }
 }
