@@ -11,7 +11,7 @@ public interface BeanPostProcessor {
     Object postProcessBeforeInitialization(Object bean, String beanName);
 
     /**
-     * 后置处理AutowireCapableBeanFactory
+     * 后置处理
      *
      * @param bean
      * @param beanName

@@ -3,6 +3,10 @@ package beSen.bean.singleton;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * SingletonBeanRegistry 的实现类
+ * @author 康盼Java开发工程师
+ */
 public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
 
     private Map<String, Object> singletonObjects = new HashMap<>();

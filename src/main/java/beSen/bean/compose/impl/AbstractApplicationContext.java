@@ -4,24 +4,25 @@ import beSen.bean.aop.BeanFactoryPostProcessor;
 import beSen.bean.aop.BeanPostProcessor;
 import beSen.bean.compose.ConfigurableApplicationContext;
 import beSen.bean.resource.impl.DefaultResourceLoader;
-import beSen.bean.support.ConfigurableListableBeanFactory;
+import beSen.bean.configurable.ConfigurableListableBeanFactory;
 
 import java.util.Map;
 
 
 /**
+ * 4(实现了5的refresh方法，调用了3的getBeanFactory和refreshBeanFactory方法)->5
+ *
+ *
  * 组合功能
- * 1.addBeanPostProcessor 添加这些实现此接口的子类
- * 2.getBean
- * 3.资源加载
- * 4.刷新容器
- *  创建BeanFactory
- *  加载 BeanDefinition
- *  获取BeanFactory
- *  根据 BeanPostProcessor 类型获取实现的子类，调用他们的方法执行前置及后置处理
- *  提前实例化单例对象
+ * 1.BeanFactory 的 getBean方法
+ * 2.提供资源加载器 DefaultResourceLoader
+ * 3.创建BeanFactory （读取XML 注册bean信息）
+ * 4.获取BeanFactory
+ * 5.根据 BeanPostProcessor 类型获取实现的子类，调用他们的方法执行前置及后置处理
+ * 6.提供registerBeanPostProcessors方法，添加前置及后置处理放入集合，提供getBean的时候调用
  *
  *
+ * @author 康盼Java开发工程师
  */
 public abstract class AbstractApplicationContext extends DefaultResourceLoader implements ConfigurableApplicationContext {
 
@@ -31,34 +32,27 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         ConfigurableListableBeanFactory beanFactory = getBeanFactory();
         invokeBeanFactoryPostProcessors(beanFactory);
         registerBeanPostProcessors(beanFactory);
+        beanFactory.preInstantiateSingletons();
     }
+
+    /**
+     * 提供给子类实现，抽象出来
+     */
+    protected abstract void refreshBeanFactory();
+
+    /**
+     * 抽象出来给子类使用
+     * 获取BeanFactory
+     *
+     * @return
+     */
+    protected abstract ConfigurableListableBeanFactory getBeanFactory();
 
     @Override
     public <T> Map<String, T> getBeansOfType(Class<T> type) {
         return getBeanFactory().getBeansOfType(type);
     }
 
-    @Override
-    public Object getBean(String name) {
-        return getBeanFactory().getBean(name);
-    }
-
-    @Override
-    public Object getBean(String name, Object... args)  {
-        return getBeanFactory().getBean(name, args);
-    }
-
-    /**
-     * 提供给子类实现
-     */
-    protected abstract void refreshBeanFactory();
-
-    /**
-     * 获取BeanFactory
-     *
-     * @return
-     */
-    protected abstract ConfigurableListableBeanFactory getBeanFactory();
 
     private void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
         Map<String, BeanFactoryPostProcessor> beanFactoryPostProcessorMap = beanFactory.getBeansOfType(BeanFactoryPostProcessor.class);
@@ -72,6 +66,30 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         for (BeanPostProcessor beanPostProcessor : beanPostProcessorMap.values()) {
             beanFactory.addBeanPostProcessor(beanPostProcessor);
         }
+    }
+
+    /**
+     * BeanFactory接口的方法
+     *
+     * @param name 注册的名字
+     * @return
+     */
+
+    @Override
+    public Object getBean(String name) {
+        return getBeanFactory().getBean(name);
+    }
+
+    /**
+     * BeanFactory接口的方法
+     *
+     * @param name 注册的名字
+     * @param args 构造方法的参数
+     * @return
+     */
+    @Override
+    public Object getBean(String name, Object... args)  {
+        return getBeanFactory().getBean(name, args);
     }
 
 

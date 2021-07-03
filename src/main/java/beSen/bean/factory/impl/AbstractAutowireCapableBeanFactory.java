@@ -2,7 +2,7 @@ package beSen.bean.factory.impl;
 
 import beSen.bean.InstantiationStrategy.InstantiationStrategy;
 import beSen.bean.InstantiationStrategy.impl.CglibSubclassingInstantiationStrategy;
-import beSen.bean.aop.AutowireCapableBeanFactory;
+import beSen.bean.aop.AutowiredCapableBeanFactory;
 import beSen.bean.aop.BeanPostProcessor;
 import beSen.bean.definition.BeanDefinition;
 import beSen.bean.definition.BeanReference;
@@ -17,21 +17,20 @@ import java.lang.reflect.Constructor;
  * createBean 的主要实现抽象类
  *
  * 后期增加了AutowireCapableBeanFactory 增加前置后置处理
+ * @author 康盼Java开发工程师
  */
-public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
+public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowiredCapableBeanFactory {
 
     private InstantiationStrategy instantiationStrategy;
 
+    /**
+     * 使用的是CGLIB
+     *
+     * @return
+     */
     public InstantiationStrategy getInstantiationStrategy() {
-        /**
-         * 这里先写死，默认是CGLIB,以后修改动态获取
-         */
         instantiationStrategy = new CglibSubclassingInstantiationStrategy();
         return instantiationStrategy;
-    }
-
-    public void setInstantiationStrategy(InstantiationStrategy instantiationStrategy) {
-        this.instantiationStrategy = instantiationStrategy;
     }
 
     @Override
@@ -108,25 +107,45 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         return wrappedBean;
     }
 
-    @Override
-    public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName) {
-        Object result = existingBean;
-        for (BeanPostProcessor processor : getBeanPostProcessors()) {
-            Object current = processor.postProcessBeforeInitialization(result, beanName);
-            if (null == current) return result;
-            result = current;
-        }
-        return result;
-    }
-
+    /**
+     * 1. 执行 BeanPostProcessor Before 处理
+     *
+     * @param existingBean
+     * @param beanName
+     * @return
+     */
     @Override
     public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName) {
         Object result = existingBean;
         for (BeanPostProcessor processor : getBeanPostProcessors()) {
             Object current = processor.postProcessAfterInitialization(result, beanName);
-            if (null == current) return result;
+            if (null == current) {
+                return result;
+            }
             result = current;
         }
         return result;
     }
+
+    /**
+     * 2. 执行 BeanPostProcessor After 处理
+     *
+     * @param existingBean
+     * @param beanName
+     * @return
+     */
+    @Override
+    public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName) {
+        Object result = existingBean;
+        for (BeanPostProcessor processor : getBeanPostProcessors()) {
+            Object current = processor.postProcessBeforeInitialization(result, beanName);
+            if (null == current) {
+                return result;
+            }
+            result = current;
+        }
+        return result;
+    }
+
+
 }

@@ -9,5 +9,14 @@ import java.lang.reflect.Constructor;
  */
 public interface InstantiationStrategy {
 
+    /**
+     * 实例化
+     *
+     * @param beanDefinition bean信息
+     * @param beanName bean 名字
+     * @param ctor 构造方法
+     * @param args 构造参数
+     * @return
+     */
     Object instantiate(BeanDefinition beanDefinition, String beanName, Constructor ctor, Object[] args);
 }

@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 模拟，真实使用请实现 PooledObjectFactory
+ * @author 康盼Java开发工程师
  * @see org.apache.commons.pool2.PooledObjectFactory
  * 然后通过 ObjectPool pool = new GenericObjectPool(实现的类);
  * @see org.apache.commons.pool2.impl.GenericObjectPool

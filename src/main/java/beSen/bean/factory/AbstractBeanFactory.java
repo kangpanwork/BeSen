@@ -11,11 +11,28 @@ import java.util.List;
  * 工厂抽象化一层，主要支撑单例获取和存储
  *
  * 后期新增 beanPostProcessors
+ * @author 康盼Java开发工程师
  */
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
 
-    /** BeanPostProcessors to apply in createBean */
+    /**
+     * 在创建bean的时候进行了使用
+     */
     private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
+
+    /**
+     *  后期增加，为了支持前置后置处理
+     *
+     * @return
+     */
+    public List<BeanPostProcessor> getBeanPostProcessors() {
+        return beanPostProcessors;
+    }
+
+    public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
+        this.beanPostProcessors.remove(beanPostProcessor);
+        this.beanPostProcessors.add(beanPostProcessor);
+    }
 
     /**
      * 核心
@@ -30,9 +47,9 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     protected <T> T doGetBean(final String name, final Object[] args) {
         Object bean = getSingleton(name);
         if (bean != null) {
+            System.out.println("单例中获取");
             return (T) bean;
         }
-
         BeanDefinition beanDefinition = getBeanDefinition(name);
         return (T) createBean(name, beanDefinition, args);
     }
@@ -63,11 +80,6 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     @Override
     public Object getBean(String name, Object... args) {
         return doGetBean(name,args);
-    }
-
-    // 后期增加，为了支持前置后置处理
-    public List<BeanPostProcessor> getBeanPostProcessors() {
-        return beanPostProcessors;
     }
 
 

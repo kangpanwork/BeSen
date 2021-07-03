@@ -18,25 +18,16 @@ import java.io.InputStream;
 
 /**
  * 组合了AbstractBeanDefinitionReader类的功能，提供XML解析， 注册 BeanDefinition
+ * @author 康盼Java开发工程师
  */
 public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
-    /**
-     * 构造方法
-     *
-     * @param registry
-     * @param resourceLoader
-     */
-    public XmlBeanDefinitionReader(BeanDefinitionRegistry registry, ResourceLoader resourceLoader) {
-        super(registry, resourceLoader);
-    }
 
-    /**
-     * 构造方法
-     *
-     * @param registry
-     */
     public XmlBeanDefinitionReader(BeanDefinitionRegistry registry) {
         super(registry);
+    }
+
+    public XmlBeanDefinitionReader(BeanDefinitionRegistry registry, ResourceLoader resourceLoader) {
+        super(registry, resourceLoader);
     }
 
     /**
@@ -56,6 +47,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         }
     }
 
+
     /**
      * 加载流，解析bean信息，注册到 bean BeanDefinition
      *
@@ -67,10 +59,14 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         NodeList childNodes = element.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); ++i) {
             // 判断是不是元素
-            if (!(childNodes.item(i) instanceof Element)) continue;
+            if (!(childNodes.item(i) instanceof Element)) {
+                continue;
+            }
 
             // 判断是不是对象
-            if (!"bean".equals(childNodes.item(i).getNodeName())) continue;
+            if (!"bean".equals(childNodes.item(i).getNodeName())) {
+                continue;
+            }
 
             //      <?xml version="1.0" encoding="UTF-8"?>
             //      <beans>
@@ -115,8 +111,12 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         BeanDefinition beanDefinition = new BeanDefinition(clazz);
         NodeList childNodes = ele.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); ++i) {
-            if (!(childNodes.item(i) instanceof Element)) continue;
-            if (!"property".equals(childNodes.item(i).getNodeName())) continue;
+            if (!(childNodes.item(i) instanceof Element)) {
+                continue;
+            }
+            if (!"property".equals(childNodes.item(i).getNodeName())) {
+                continue;
+            }
 
             // 开始解析
             Element e = (Element) childNodes.item(i);

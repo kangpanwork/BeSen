@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 单例注册实现
+ * @author 康盼Java开发工程师
  */
 public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
 

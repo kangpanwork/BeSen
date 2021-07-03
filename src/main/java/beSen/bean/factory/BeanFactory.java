@@ -1,5 +1,8 @@
 package beSen.bean.factory;
 
+/**
+ * @author 康盼Java开发工程师
+ */
 public interface BeanFactory {
     /**
      * 根据名字获取

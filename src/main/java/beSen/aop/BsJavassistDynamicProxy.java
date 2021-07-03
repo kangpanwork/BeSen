@@ -8,6 +8,9 @@ import javassist.CtNewConstructor;
 import javassist.CtNewMethod;
 
 
+/**
+ * @author 康盼Java开发工程师
+ */
 public class BsJavassistDynamicProxy implements JavassistDynamicProxy {
 
     private BsJavassist bsJavassist;
@@ -21,21 +24,7 @@ public class BsJavassistDynamicProxy implements JavassistDynamicProxy {
     }
 
     /**
-     * 动态生成字节码
-     *
-     *
-     * public class DynamicModel implements IService {
-     *     private String name;
-     *
-     *     public DynamicModel() {
-     *     }
-     *
-     *     public String getName(String var1) {
-     *         System.out.println("do something before...");
-     *         System.out.println("do something after...");
-     *         return var1;
-     *     }
-     * }
+     * makeClass
      *
      * @return
      * @throws Exception

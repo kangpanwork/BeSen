@@ -1,4 +1,4 @@
-package beSen.bean;
+package beSen.bean.other;
 
 /**
  * bean 属性描述

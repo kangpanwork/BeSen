@@ -7,5 +7,11 @@ import beSen.bean.definition.BeanDefinition;
  */
 public interface BeanDefinitionRegistry {
 
+    /**
+     * BeanDefinition 注册
+     *
+     * @param beanName
+     * @param beanDefinition
+     */
     void registerBeanDefinition(String beanName, BeanDefinition beanDefinition);
 }

@@ -16,6 +16,21 @@ public abstract  class AbstractBeanFactory extends DefaultSingletonBeanRegistry 
         return createBean(cls,beanName,args);
     }
 
+    /**
+     * getBeanClass
+     *
+     * @param beanName
+     * @return
+     */
     protected abstract Class getBeanClass(String beanName);
+
+    /**
+     * createBean
+     *
+     * @param cls 类型
+     * @param beanName 注册的bean名
+     * @param args 参数名
+     * @return
+     */
     protected abstract Object createBean(Class cls,String beanName,Object... args);
 }

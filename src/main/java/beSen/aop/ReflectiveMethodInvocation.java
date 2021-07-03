@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 
 /**
  * 方法反射调用包装类，这里 proceed() 反射调用被代理类的方法
+ * @author 康盼Java开发工程师
  */
 public class ReflectiveMethodInvocation implements MethodInvocation {
     private final Object target;

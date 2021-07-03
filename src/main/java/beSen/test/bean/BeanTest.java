@@ -1,8 +1,9 @@
 package beSen.test.bean;
 
-import beSen.bean.PropertyDescriptor;
-import beSen.bean.SimpleBeanInfo;
+import beSen.bean.other.PropertyDescriptor;
+import beSen.bean.other.SimpleBeanInfo;
 
+import beSen.bean.compose.impl.ClassPathXmlApplicationContext;
 import beSen.bean.definition.BeanDefinition;
 import beSen.bean.definition.BeanReference;
 import beSen.bean.definition.PropertyValue;
@@ -88,6 +89,15 @@ public class BeanTest {
         beSen.test.bean.model.Student student = (beSen.test.bean.model.Student)factory.getBean("student");
         System.out.println(student);
         StudentDao studentDao = (StudentDao) factory.getBean("studentDao");
+        System.out.println(studentService.queryScoreLessThanThis(student));
+    }
+
+    @Test
+    public void testXML() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:springPostProcessor.xml");
+        StudentService studentService = (StudentService) applicationContext.getBean("studentService");
+        beSen.test.bean.model.Student student = (beSen.test.bean.model.Student)applicationContext.getBean("student");
+        System.out.println(student);
         System.out.println(studentService.queryScoreLessThanThis(student));
     }
 }

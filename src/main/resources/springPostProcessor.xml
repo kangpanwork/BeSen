@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+
+    <bean id="student" class="beSen.test.bean.model.Student">
+        <property name="name" value="小李"/>
+        <property name="score" value="75"/>
+    </bean>
+
+    <bean id="studentDao" class="beSen.test.bean.model.StudentDao"/>
+
+    <bean id="studentService" class="beSen.test.bean.model.StudentService">
+        <property name="student" ref="student"/>
+        <property name="studentDao" ref="studentDao"/>
+    </bean>
+
+    <bean class="beSen.bean.support.PrintBeanFactoryPostProcessor" />
+    <bean class="beSen.bean.support.PrintBeanPostProcessor" />
+</beans>
