@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--定义一个XSD文件描述组件内容-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:beans="http://www.springframework.org/schema/beans"
+            xmlns="http://besen/schema/user" targetNamespace="http://besen/schema/user"
+            elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xsd:import namespace="http://www.springframework.org/schema/beans"/>
+    <!--在上面的XSD文件中描述了一个新的targetNamespace，并在这个空间中定义了一个name为user的element-->
+
+    <xsd:element name="user">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="beans:identifiedType">
+                    <xsd:attribute name="userName" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[ userName ]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="email" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[ email  ]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

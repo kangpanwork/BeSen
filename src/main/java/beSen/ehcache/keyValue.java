@@ -1,5 +1,8 @@
 package beSen.ehcache;
 
+/**
+ * @author 康盼Java开发工程师
+ */
 public class keyValue {
     private String key;
     private String value;

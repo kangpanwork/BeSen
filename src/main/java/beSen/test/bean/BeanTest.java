@@ -13,7 +13,12 @@ import beSen.bean.readerRegistry.impl.XmlBeanDefinitionReader;
 import beSen.test.bean.model.StudentDao;
 import beSen.test.bean.model.StudentService;
 import beSen.test.pdf.model.Student;
+import beSen.xsd.design.model.User;
 import org.junit.Test;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import java.util.stream.Stream;
 
@@ -99,6 +104,13 @@ public class BeanTest {
         beSen.test.bean.model.Student student = (beSen.test.bean.model.Student)applicationContext.getBean("student");
         System.out.println(student);
         System.out.println(studentService.queryScoreLessThanThis(student));
+    }
+
+    @Test
+    public void testXSD() {
+        BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("user.xml"));
+        User user = (User) beanFactory.getBean("user");
+        System.out.format("User=> [userName：%s] [email：%s]  \r\n", user.getUserName(), user.getEmail());
     }
 }
 

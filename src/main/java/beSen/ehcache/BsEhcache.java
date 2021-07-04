@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
+/**
+ * @author 康盼Java开发工程师
+ */
 @Component
 public class BsEhcache implements Ehcache {
 

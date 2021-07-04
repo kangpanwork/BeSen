@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+/**
+ * @author 康盼Java开发工程师
+ */
 @RequestMapping("/cache")
 @RestController
 public class EhcacheController {

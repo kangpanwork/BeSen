@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:userxml="http://besen/schema/user"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+	 http://besen/schema/user http://besen/schema/user.xsd">
+
+    <userxml:user id="user" userName="kangpan" email="kangpan_work@163.com"/>
+
+</beans>

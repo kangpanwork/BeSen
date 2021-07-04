@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 信号量，用来控制同时访问特定资源的线程数量，通过协调各个线程，以保证合理的使用资源
+ * @author 康盼Java开发工程师
  */
 public interface Semaphore {
 
