@@ -4,7 +4,7 @@
        xmlns:userxml="http://besen/schema/user"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
-	 http://besen/schema/user http://user/schema/user.xsd">
+	 http://besen/schema/user http://besen/schema/user.xsd">
 
     <userxml:user id="user" userName="kangpan" email="kangpan_work@163.com"/>
 
