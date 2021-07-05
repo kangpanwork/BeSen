@@ -56,8 +56,13 @@ public class BsMysql implements SimpleExecutor{
         }
     }
 
-    // 本来想这里注入 Bean 的，但是 mysqlConConfig 为 null;
-    // 之前使用的是 @Bean 注解，用属性构造解决了
+
+    /**
+     * 本来想这里注入 Bean 的，但是 mysqlConConfig 为 null;
+     * 之前使用的是 @Bean 注解，用属性构造解决了
+     *
+     * @throws Exception
+     */
     @Autowired
     public void setBsSimpleExecutor() throws Exception{
         if (bsSimpleExecutor == null) {
