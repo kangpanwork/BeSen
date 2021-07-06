@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author 康盼Java开发工程师
@@ -32,7 +33,7 @@ public class AttachmentController {
         AttachmentType a1 = new AttachmentType();
         a1.setType_name("画册");
         AttachmentType a2 = new AttachmentType();
-        a1.setType_name("图书");
+        a2.setType_name("图书");
 
         List<Attachment> addList1 = new ArrayList<>();
         Attachment t1 = new Attachment();
@@ -50,9 +51,14 @@ public class AttachmentController {
 
         list.add(a1);
         list.add(a2);
-        // 如果是JAVA实现
-        // 1.先插类型表，foreach保存
-        // 2.根据type_name获取type_id，然后插入对应的文档，foreach保存
-        return attachmentMapper.batchInsert(list);
+
+        List<AttachmentType> result = attachmentMapper.selectAll();
+        if (result != null && result.size() > 0) {
+            List<Integer> typeIds = result.stream().map(AttachmentType::getType_id).collect(Collectors.toList());
+            attachmentMapper.batchDelete(typeIds);
+        }
+
+
+        return attachmentMapper.batchInsert2(list);
     }
 }

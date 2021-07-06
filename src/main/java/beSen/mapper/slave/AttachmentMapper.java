@@ -17,6 +17,23 @@ public interface AttachmentMapper {
     int batchInsert(List<AttachmentType> list);
 
     /**
+     * 批量插入
+     *
+     * @param list
+     * @return
+     */
+    int batchInsert2(List<AttachmentType> list);
+
+
+    /**
+     * 根据type_id批量删除
+     *
+     * @param list
+     * @return
+     */
+    int batchDelete(List<Integer> list);
+
+    /**
      * 查询
      *
      * @return

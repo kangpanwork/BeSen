@@ -5,6 +5,13 @@
         select * from t_attachment_type
     </select>
 
+    <delete id="batchDelete" parameterType="java.lang.Integer">
+        delete from t_attachment_type where type_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
     <!--  附件和附件类型表，第一次传ABC，则肯定是新增ABC；第二次传ABD，相对于删除了C 新增了D，处理方式是AB匹配上了flag 赋值'Y' 没匹配新增 历史的flag为N的删除 -->
     <!-- 难点：MySQL不知道两个SQL的自增ID怎么获取  然后下面SQL是oracle的Mysql的不知道怎么写 -->
     <insert id="batchInsert" parameterType="beSen.mapper.model.AttachmentType">
@@ -36,5 +43,13 @@
             update t_attachment t set t.flag =  'N';
         </foreach>
         end;
+    </insert>
+
+    <insert id="batchInsert2" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="type_id">
+        insert into T_ATTACHMENT_TYPE(type_name) values
+        <!--mybatis 参数映射为list @Param 可以指定入参名称-->
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.type_name})
+        </foreach>
     </insert>
 </mapper>
