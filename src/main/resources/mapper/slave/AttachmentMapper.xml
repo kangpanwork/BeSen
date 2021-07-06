@@ -4,4 +4,37 @@
     <select id="selectAll" resultType="beSen.mapper.model.AttachmentType">
         select * from t_attachment_type
     </select>
+
+    <!--  附件和附件类型表，第一次传ABC，则肯定是新增ABC；第二次传ABD，相对于删除了C 新增了D，处理方式是AB匹配上了flag 赋值'Y' 没匹配新增 历史的flag为N的删除 -->
+    <!-- 难点：MySQL不知道两个SQL的自增ID怎么获取  然后下面SQL是oracle的Mysql的不知道怎么写 -->
+    <insert id="batchInsert" parameterType="beSen.mapper.model.AttachmentType">
+        declare type_id INT default 0;
+        begin
+        <foreach collection="list" item="item" index="index" >
+            merge into T_ATTACHMENT_TYPE t1
+            using(select #{item.type_name,jdbcType=VARCHAR} type_name) t2
+            on t1.type_name = t2.type_name
+            when not matched then
+            insert(t1.type_name) values(#{item.type_name,jdbcType=VARCHAR});
+            select t.type_id into type_id from T_ATTACHMENT_TYPE t where t.type_name = #{item.type_name,jdbcType=VARCHAR};
+            <if test="item.list != null and !item.list.isEmpty()" >
+                <foreach collection="item.list" item="ele" index="index" >
+                    merge into t_attachment t
+                    using(select #{ele.doc_name,jdbcType=VARCHAR} doc_name,
+                                 #{ele.doc_id,jdbcType=VARCHAR} doc_id,
+                                 t1.type_id,
+                    from t_attachment t1 where t1.type_id = type_id) t2
+                    on t.type_id = t2.type_id
+                    when matched then
+                    update set t.flag = 'Y'
+                    when not matched then
+                    insert(t.doc_id,t.doc_name,t.type_id)values(#{ele.doc_id,jdbcType=VARCHAR},
+                    #{ele.doc_name,jdbcType=VARCHAR},type_id);
+                </foreach>
+            </if>
+            update t_attachment t set t.isdeleted = 'Y' where t.flag = 'N';
+            update t_attachment t set t.flag =  'N';
+        </foreach>
+        end;
+    </insert>
 </mapper>

@@ -9,7 +9,7 @@ import java.util.List;
 public class AttachmentType {
     private int type_id;
     private String type_name;
-    private List<Attachment> attachmentList;
+    private List<Attachment> list;
 
     public int getType_id() {
         return type_id;
@@ -27,11 +27,11 @@ public class AttachmentType {
         this.type_name = type_name;
     }
 
-    public List<Attachment> getAttachmentList() {
-        return attachmentList;
+    public List<Attachment> getList() {
+        return list;
     }
 
-    public void setAttachmentList(List<Attachment> attachmentList) {
-        this.attachmentList = attachmentList;
+    public void setList(List<Attachment> list) {
+        this.list = list;
     }
 }
