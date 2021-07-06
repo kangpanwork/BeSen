@@ -1,5 +1,6 @@
 package beSen.mapper.slave;
 
+import beSen.mapper.model.Attachment;
 import beSen.mapper.model.AttachmentType;
 
 import java.util.List;
@@ -23,6 +24,14 @@ public interface AttachmentMapper {
      * @return
      */
     int batchInsert2(List<AttachmentType> list);
+
+    /**
+     * 批量插入
+     *
+     * @param list
+     * @return
+     */
+    int batchInsert3(List<Attachment> list);
 
 
     /**

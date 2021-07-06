@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author 康盼Java开发工程师
@@ -31,14 +30,17 @@ public class AttachmentController {
     public int batchInsert() {
         List<AttachmentType> list = new ArrayList<>();
         AttachmentType a1 = new AttachmentType();
+        a1.setType_id(1);
         a1.setType_name("画册");
         AttachmentType a2 = new AttachmentType();
+        a2.setType_id(2);
         a2.setType_name("图书");
 
         List<Attachment> addList1 = new ArrayList<>();
         Attachment t1 = new Attachment();
         t1.setDoc_id("080980970709");
         t1.setDoc_name("梵高.画册");
+        t1.setType_id(1);
         addList1.add(t1);
         a1.setList(addList1);
 
@@ -46,19 +48,37 @@ public class AttachmentController {
         Attachment t2 = new Attachment();
         t2.setDoc_id("432432432432424");
         t2.setDoc_name("梵高.图书");
+        t2.setType_id(2);
         addList2.add(t2);
         a2.setList(addList2);
 
         list.add(a1);
         list.add(a2);
 
-        List<AttachmentType> result = attachmentMapper.selectAll();
-        if (result != null && result.size() > 0) {
-            List<Integer> typeIds = result.stream().map(AttachmentType::getType_id).collect(Collectors.toList());
-            attachmentMapper.batchDelete(typeIds);
+        List<AttachmentType> insertList = new ArrayList<>();
+        List<AttachmentType> updateList = new ArrayList<>();
+
+        List<Attachment> insertList2 = new ArrayList<>();
+        List<Attachment> updateList2 = new ArrayList<>();
+
+
+        for(AttachmentType attachmentType : list) {
+            if(attachmentType.getType_id() > 0) {
+                updateList.add(attachmentType);
+            } else {
+                insertList.add(attachmentType);
+            }
         }
 
 
-        return attachmentMapper.batchInsert2(list);
+//        List<AttachmentType> result = attachmentMapper.selectAll();
+//        if (result != null && result.size() > 0) {
+//            List<Integer> typeIds = result.stream().map(AttachmentType::getType_id).collect(Collectors.toList());
+//            attachmentMapper.batchDelete(typeIds);
+//        }
+        attachmentMapper.batchInsert3(addList2);
+        attachmentMapper.batchInsert3(addList1);
+
+        return 0;
     }
 }

@@ -52,4 +52,12 @@
             (#{item.type_name})
         </foreach>
     </insert>
+
+    <insert id="batchInsert3" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+            insert into t_attachment (doc_id,doc_name,type_id) values
+            <!--mybatis 参数映射为list @Param 可以指定入参名称-->
+            <foreach collection="list" item="ele" index="index" separator=",">
+                (#{ele.doc_id},#{ele.doc_name},#{ele.type_id})
+            </foreach>
+    </insert>
 </mapper>
