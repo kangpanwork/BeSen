@@ -3,11 +3,14 @@ package beSen.test.controller;
 import beSen.mapper.model.Attachment;
 import beSen.mapper.model.AttachmentType;
 import beSen.mapper.slave.AttachmentMapper;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.RollbackException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,60 +25,37 @@ public class AttachmentController {
     @Autowired
     private AttachmentMapper attachmentMapper;
 
-    private AttachmentType t1 = new AttachmentType("PDF");
-    private AttachmentType t2 = new AttachmentType("JPG");
 
-    private Attachment a1 = new Attachment("43243422","3242.pdf",0);
-    private Attachment a2 = new Attachment("432443","555.pfd",0);
-    private Attachment a3 = new Attachment("G888fds","1.jpg",0);
-    private Attachment a4 = new Attachment("sdf32","2.jpg",0);
-    private Attachment a5 = new Attachment("op343","54.pdf",0);
 
 
 
     /**
      * 劣质的写法: VO 命名不规范 不能以下划线命名 映射不了
+     * [{"attachments":[{"docId":"43243422","docName":"3242.pdf","id":0,"typeId":0},{"docId":"432443","docName":"555.pfd","id":0,"typeId":0}],"typeId":0,"typeName":"PDF"},{"attachments":[{"docId":"G888fds","docName":"1.jpg","id":0,"typeId":0},{"docId":"sdf32","docName":"2.jpg","id":0,"typeId":0}],"typeId":0,"typeName":"JPG"}]
      *
      * @return
      */
     @GetMapping("/batchInsert")
-    public int batchInsert() {
-
-        // 第一组数据 新增
-        List<AttachmentType> t_list_1 = new ArrayList<>();
-        List<Attachment> a_list_1 = new ArrayList<>();
-        a_list_1.add(a1);a_list_1.add(a2);
-        List<Attachment> a_list_2 = new ArrayList<>();
-        a_list_2.add(a3);a_list_2.add(a4);
-        t1.setAttachments(a_list_1);t2.setAttachments(a_list_2);
-        t_list_1.add(t1);t_list_1.add(t2);
-
-        attachmentMapper.batchInsert(t_list_1);
-        t1.getAttachments().forEach(ele -> ele.setTypeId(t1.getTypeId()));
-        t2.getAttachments().forEach(ele -> ele.setTypeId(t2.getTypeId()));
-        List<Attachment> attachmentList = t_list_1.stream().flatMap(ele -> ele.getAttachments().stream()).collect(Collectors.toList());
-        attachmentMapper.batchInsertAtt(attachmentList);
-
-        // 第二组数据 删除 和 更新
-        List<AttachmentType> t_list_2 = new ArrayList<>();
-        // t1的附件删除了a1添加了a5, t2的附件已经全部删除了
-        t1.getAttachments().remove(a1);
-        t1.getAttachments().remove(a2);
-        a2.setDocName("更新.pdf");
-        t1.getAttachments().add(a2);
-        t1.getAttachments().add(a5);
-        t2.getAttachments().clear();
-        t_list_2.add(t1);t_list_2.add(t2);
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public int batchInsert(List<AttachmentType> list) {
         // org.apache.ibatis.executor.ExecutorException: No constructor found in 添加无参构造方法
         List<AttachmentType> searchList = attachmentMapper.selectAttachmentType();
-        // 为新增的附件赋值typeId
-        t1.getAttachments().forEach(ele -> ele.setTypeId(t1.getTypeId()));
-        // 先获取目前有的附件
-        List<Attachment> attachments = t_list_2.stream().flatMap(ele -> ele.getAttachments().stream()).collect(Collectors.toList());
-        // 获取它们的id
-        String nowIds = attachments.stream().filter(ele -> ele.getId() > 0).map(ele -> String.valueOf(ele.getId())).collect(Collectors.joining());
-        // 获取没有id的数据(新增)
-        List<Attachment> insertList = attachments.stream().filter(ele -> ele.getId() == 0).collect(Collectors.toList());
+        String nowTypeIds =  list.stream().map(ele -> String.valueOf(ele.getTypeId())).collect(Collectors.joining());
+        List<AttachmentType> insertTypeList = list.stream().filter(ele -> ele.getTypeId() == 0).collect(Collectors.toList());
+        if (insertTypeList.size() > 0) {
+            attachmentMapper.batchInsert(insertTypeList);
+        }
+        List<AttachmentType> updateTypeList = list.stream().filter(ele -> ele.getTypeId() > 0).collect(Collectors.toList());
+        if (updateTypeList.size() > 0) {
+        }
+        List<AttachmentType> deleteTypeList =  searchList.stream().filter(ele -> !nowTypeIds.contains(String.valueOf(ele.getTypeId()))).collect(Collectors.toList());
+        if (deleteTypeList.size() > 0) {
+        }
+        list.stream().forEach(ele -> ele.getAttachments().forEach(e -> e.setTypeId(ele.getTypeId())));
+        List<Attachment> attachmentList = list.stream().flatMap(ele -> ele.getAttachments().stream()).collect(Collectors.toList());
+        List<Attachment> insertList = attachmentList.stream().filter(ele -> ele.getId() == 0).collect(Collectors.toList());
+        attachmentMapper.batchInsertAtt(insertList);
+        String nowIds = attachmentList.stream().filter(ele -> ele.getId() > 0).map(ele -> String.valueOf(ele.getId())).collect(Collectors.joining());
         if (insertList.size() > 0) {
             attachmentMapper.batchInsertAtt(insertList);
         }
@@ -83,7 +63,7 @@ public class AttachmentController {
         if (deleteList.size() > 0) {
             attachmentMapper.batchDeleteAtt(deleteList);
         }
-        List<Attachment> updateList = searchList.stream().flatMap(ele -> ele.getAttachments().stream()).filter(ele -> nowIds.contains(String.valueOf(ele.getId()))).collect(Collectors.toList());
+        List<Attachment> updateList = attachmentList.stream().filter(ele -> nowIds.contains(String.valueOf(ele.getId()))).collect(Collectors.toList());
         if (updateList.size() > 0) {
             attachmentMapper.batchUpdateAtt(deleteList);
         }

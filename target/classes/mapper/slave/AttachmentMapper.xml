@@ -75,12 +75,12 @@
 
     <update id="batchUpdateAtt" parameterType="java.util.List">
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
-            update t_attachmen t
+            update t_attachment t
             <set>
-                <if test="item.doc_id != null and item.doc_id != ''">
+                <if test="item.docId != null and item.docId != ''">
                     t.doc_id = #{item.docId, jdbcType=VARCHAR},
                 </if>
-                <if test="item.doc_name != null and item.doc_name != ''">
+                <if test="item.docName != null and item.docName != ''">
                     t.doc_name = #{item.docName, jdbcType=VARCHAR},
                 </if>
             </set>
