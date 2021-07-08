@@ -9,7 +9,7 @@ CREATE TABLE t_attachment (
 
 ALTER TABLE t_attachment
 ADD COLUMN flag VARCHAR(45) NULL AFTER `type_id`,
-ADD COLUMN isdeleted VARCHAR(45) NULL AFTER `flag`;
+ADD COLUMN isDeleted VARCHAR(45) NULL AFTER `flag`;
 
 
 drop table if exists T_ATTACHMENT_TYPE;

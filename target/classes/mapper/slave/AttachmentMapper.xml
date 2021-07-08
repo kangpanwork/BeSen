@@ -1,38 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="beSen.mapper.slave.AttachmentMapper">
-    <select id="selectAll" resultType="beSen.mapper.model.AttachmentType">
-        select t.type_name,t.type_id from t_attachment_type t
-    </select>
 
-    <select id="selectAll2" resultType="beSen.mapper.model.Attachment">
-        select t.doc_id,t.doc_name,t.type_id from t_attachment t where t.type_id = #{type_id}
-    </select>
-
-
-    <select id="select" resultType="beSen.mapper.model.AttachmentType">
-        select t.type_name as typeName,t.type_id as typeId from t_attachment_type t where t.type_name = #{type_name}
-    </select>
-
-    <delete id="batchDelete" parameterType="java.lang.Integer">
-        delete from t_attachment_type where type_id in
-        <foreach collection="list" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </delete>
 
     <!--  附件和附件类型表，第一次传ABC，则肯定是新增ABC；第二次传ABD，相对于删除了C 新增了D，处理方式是AB匹配上了flag 赋值'Y' 没匹配新增 历史的flag为N的删除 -->
     <!-- 难点：MySQL不知道两个SQL的自增ID怎么获取  然后下面SQL是oracle的Mysql的不知道怎么写 -->
-    <insert id="batchInsert" parameterType="beSen.mapper.model.AttachmentType">
+    <insert id="batchInsertTest" parameterType="beSen.mapper.model.AttachmentType">
         declare type_id INT default 0;
         begin
         <foreach collection="list" item="item" index="index" >
-            merge into T_ATTACHMENT_TYPE t1
+            merge into t_attachment_type t1
             using(select #{item.type_name,jdbcType=VARCHAR} type_name) t2
             on t1.type_name = t2.type_name
             when not matched then
             insert(t1.type_name) values(#{item.type_name,jdbcType=VARCHAR});
-            select t.type_id into type_id from T_ATTACHMENT_TYPE t where t.type_name = #{item.type_name,jdbcType=VARCHAR};
+            select t.type_id into type_id from t_attachment_type t where t.type_name = #{item.type_name,jdbcType=VARCHAR};
             <if test="item.list != null and !item.list.isEmpty()" >
                 <foreach collection="item.list" item="ele" index="index" >
                     merge into t_attachment t
@@ -48,224 +30,64 @@
                     #{ele.doc_name,jdbcType=VARCHAR},type_id);
                 </foreach>
             </if>
-            update t_attachment t set t.isdeleted = 'Y' where t.flag = 'N';
+            update t_attachment t set t.isDeleted = 'Y' where t.flag = 'N';
             update t_attachment t set t.flag =  'N';
         </foreach>
         end;
     </insert>
-
-    <insert id="batchInsert2" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="type_id">
-        insert into T_ATTACHMENT_TYPE(type_name) values
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="typeId">
+        insert into t_attachment_type(type_name) values
         <!--mybatis 参数映射为list @Param 可以指定入参名称-->
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.type_name})
+            (#{item.typeName})
         </foreach>
     </insert>
 
-    <insert id="batchInsert3" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-            insert into t_attachment (doc_id,doc_name,type_id) values
-            <!--mybatis 参数映射为list @Param 可以指定入参名称-->
-            <foreach collection="list" item="ele" index="index" separator=",">
-                (#{ele.doc_id},#{ele.doc_name},#{ele.type_id})
-            </foreach>
+    <insert id="batchInsertAtt" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into t_attachment (doc_id,doc_name,type_id) values
+        <!--mybatis 参数映射为list @Param 可以指定入参名称-->
+        <foreach collection="list" item="ele" index="index" separator=",">
+            (#{ele.docId},#{ele.docName},#{ele.typeId})
+        </foreach>
     </insert>
 
+    <resultMap id="resultMap" type="beSen.mapper.model.AttachmentType">
+        <id column="type_id" jdbcType="INTEGER" property="typeId" />
+        <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+            <collection property="attachments" ofType="beSen.mapper.model.Attachment" column="typeId">
+                <id column="id" jdbcType="INTEGER" property="id" />
+                <result column="type_id" jdbcType="VARCHAR" property="typeId" />
+                <result column="doc_id" jdbcType="VARCHAR" property="docId" />
+                <result column="doc_name" jdbcType="VARCHAR" property="docName" />
+            </collection>
+    </resultMap>
+    <select id="selectAttachmentType" resultMap="resultMap">
+        select t1.type_id,t1.type_name,t2.id,t2.type_id,t2.doc_id,t2.doc_name from t_attachment_type t1 inner join t_attachment t2
+        on t1.type_id = t2.type_id
+    </select>
 
-    <update id="batchUpdate" parameterType="java.util.List">
-        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
-            update T_ATTACHMENT_TYPE t
-            <set>
-                <if test="item.type_name != null and item.type_name != ''">
-                    t.type_name = #{item.type_name, jdbcType=VARCHAR}
-                </if>
-            </set>
-            where t.type_id = #{item.type_id};
+    <delete id="batchDeleteAtt" parameterType="java.util.List">
+        delete from t_attachment where id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.id}
         </foreach>
-    </update>
+    </delete>
 
-    <update id="batchUpdate2" parameterType="java.util.List">
+    <update id="batchUpdateAtt" parameterType="java.util.List">
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
-            update T_ATTACHMEN t
+            update t_attachmen t
             <set>
                 <if test="item.doc_id != null and item.doc_id != ''">
-                    t.doc_id = #{item.doc_id, jdbcType=VARCHAR},
+                    t.doc_id = #{item.docId, jdbcType=VARCHAR},
                 </if>
                 <if test="item.doc_name != null and item.doc_name != ''">
-                    t.doc_name = #{item.doc_name, jdbcType=VARCHAR},
+                    t.doc_name = #{item.docName, jdbcType=VARCHAR},
                 </if>
             </set>
-            where t.type_id = #{item.type_id};
+            where t.type_id = #{item.typeId};
         </foreach>
     </update>
-    <select id="selectAll" resultType="com.kangpan.model.Coffee">
-        select
-        t.id,
-        t.name,
-        t.price,
-        t.state,
-        t.coffeeDesc,
-        t.create_time as createTime,
-        t.update_time as updateTime,
-        t.createdBy,
-        t.updatedBy
-        from t_coffee t
-        order by t.id asc
-    </select>
 
-    <select id="select" resultType="com.kangpan.model.Coffee" parameterType="com.kangpan.model.Coffee">
-        select
-        t.id,
-        t.name,
-        t.price,
-        t.state,
-        t.coffeeDesc,
-        t.create_time as createTime,
-        t.update_time as updateTime,
-        t.createdBy,
-        t.updatedBy
-        from t_coffee t
-        <where>
-            <if test="id != null and id != ''">
-                AND t.id = #{id,jdbcType = BIGINT}
-            </if>
-            <if test="name != null and name != ''">
-                AND t.name = #{name, jdbcType = VARCHAR}
-            </if>
-            <if test="state != null">
-                AND t.state = #{state, jdbcType = INTEGER}
-            </if>
-        </where>
-        order by t.id asc
-    </select>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.kangpan.model.Coffee">
-        insert into t_coffee(
-        name,
-        price,
-        state,
-        coffeeDesc,
-        create_time,
-        update_time,
-        createdBy,
-        updatedBy)
-        values (#{name}, #{price}, #{state}, #{coffeeDesc}, now(), now(), 'system', 'system')
-    </insert>
-
-    <update id="update" parameterType="com.kangpan.model.Coffee">
-        update t_coffee t
-        <set>
-            <if test="name != null and name != ''">
-                t.name = #{name, jdbcType=VARCHAR},
-            </if>
-            <if test="price != null">
-                t.price = #{price, jdbcType=BIGINT},
-            </if>
-            <if test="state != null">
-                t.state = #{state, jdbcType=INTEGER},
-            </if>
-            <if test="coffeeDesc != null and coffeeDesc != ''">
-                t.coffeeDesc = #{coffeeDesc, jdbcType=VARCHAR},
-            </if>
-            <if test="createTime != null">
-                t.create_time = #{createTime, jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateTime != null">
-                t.update_time = #{updateTime, jdbcType=TIMESTAMP},
-            </if>
-            <if test="createdBy != null and createdBy != ''">
-                t.createdBy = #{createdBy, jdbcType=VARCHAR},
-            </if>
-            <if test="updatedBy != null and updatedBy != ''">
-                t.updatedBy = #{updatedBy, jdbcType=VARCHAR}
-            </if>
-        </set>
-        where t.id = #{id, jdbcType=BIGINT};
-    </update>
-
-    <delete id="delete" parameterType="long">
-        delete from t_coffee where id = #{id}
-    </delete>
-
-    <select id="batchSelect" resultType="com.kangpan.model.Coffee" parameterType="java.util.List">
-        select
-        t.id,
-        t.name,
-        t.price,
-        t.state,
-        t.coffeeDesc,
-        t.create_time as createTime,
-        t.update_time as updateTime,
-        t.createdBy,
-        t.updatedBy
-        from t_coffee t
-        <where>
-            t.id in
-            <trim prefix="(" suffix=")">
-                <foreach collection="list" item="item"  index="index"  separator=",">
-                    <if test="item.id != null">
-                        #{item.id}
-                    </if>
-                </foreach>
-            </trim>
-        </where>
-        order by t.update_time desc
-    </select>
-
-    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-        insert into t_coffee(
-        name,
-        price,
-        state,
-        coffeeDesc,
-        create_time,
-        update_time,
-        createdBy,
-        updatedBy)
-        values
-        <!--mybatis 参数映射为list @Param 可以指定入参名称-->
-        <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.name}, #{item.price}, #{item.state}, #{item.coffeeDesc}, now(), now(), 'system', 'system')
-        </foreach>
-    </insert>
-
-    <delete id="batchDelete" parameterType="long">
-        delete from t_coffee where id in
-        <foreach collection="array" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </delete>
-
-    <update id="batchUpdate" parameterType="java.util.List">
-        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
-            update t_coffee t
-            <set>
-                <if test="item.name != null and item.name != ''">
-                    t.name = #{item.name, jdbcType=VARCHAR},
-                </if>
-                <if test="item.price != null">
-                    t.price = #{item.price, jdbcType=BIGINT},
-                </if>
-                <if test="item.state != null">
-                    t.state = #{item.state, jdbcType=INTEGER},
-                </if>
-                <if test="item.coffeeDesc != null and item.coffeeDesc != ''">
-                    t.coffeeDesc = #{item.coffeeDesc, jdbcType=VARCHAR},
-                </if>
-                <if test="item.createTime != null">
-                    t.create_time = #{item.createTime, jdbcType=TIMESTAMP},
-                </if>
-                <if test="item.updateTime != null">
-                    t.update_time = #{item.updateTime, jdbcType=TIMESTAMP},
-                </if>
-                <if test="item.createdBy != null and item.createdBy != ''">
-                    t.createdBy = #{item.createdBy, jdbcType=VARCHAR},
-                </if>
-                <if test="item.updatedBy != null and item.updatedBy != ''">
-                    t.updatedBy = #{item.updatedBy, jdbcType=VARCHAR}
-                </if>
-            </set>
-            where t.id = #{item.id, jdbcType=BIGINT};
-        </foreach>
-    </update>
 
 </mapper>

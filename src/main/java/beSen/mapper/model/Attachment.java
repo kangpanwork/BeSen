@@ -1,16 +1,33 @@
 package beSen.mapper.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * 附件
  * @author 康盼Java开发工程师
  */
+@Data
 public class Attachment {
     private int id;
-    private String doc_id;
-    private String doc_name;
-    private int type_id;
-    private String flag;
-    private String isdeleted;
+    private String docId;
+    private String docName;
+    private int typeId;
+
+    public Attachment() {
+    }
+
+    public Attachment(String docId, String docName) {
+        this.docId = docId;
+        this.docName = docName;
+    }
+
+    public Attachment(String docId, String docName, int typeId) {
+        this.docId = docId;
+        this.docName = docName;
+        this.typeId = typeId;
+    }
 
     public int getId() {
         return id;
@@ -20,43 +37,27 @@ public class Attachment {
         this.id = id;
     }
 
-    public String getDoc_id() {
-        return doc_id;
+    public String getDocId() {
+        return docId;
     }
 
-    public void setDoc_id(String doc_id) {
-        this.doc_id = doc_id;
+    public void setDocId(String docId) {
+        this.docId = docId;
     }
 
-    public String getDoc_name() {
-        return doc_name;
+    public String getDocName() {
+        return docName;
     }
 
-    public void setDoc_name(String doc_name) {
-        this.doc_name = doc_name;
+    public void setDocName(String docName) {
+        this.docName = docName;
     }
 
-    public int getType_id() {
-        return type_id;
+    public int getTypeId() {
+        return typeId;
     }
 
-    public void setType_id(int type_id) {
-        this.type_id = type_id;
-    }
-
-    public String getFlag() {
-        return flag;
-    }
-
-    public void setFlag(String flag) {
-        this.flag = flag;
-    }
-
-    public String getIsdeleted() {
-        return isdeleted;
-    }
-
-    public void setIsdeleted(String isdeleted) {
-        this.isdeleted = isdeleted;
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
     }
 }

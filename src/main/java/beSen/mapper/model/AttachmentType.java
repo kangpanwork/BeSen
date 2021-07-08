@@ -1,5 +1,7 @@
 package beSen.mapper.model;
 
+
+
 import java.util.List;
 
 /**
@@ -9,24 +11,14 @@ import java.util.List;
 public class AttachmentType {
     private int typeId;
     private String typeName;
-    private List<Attachment> list;
+    private List<Attachment> attachments;
 
-//    public int getType_id() {
-//        return type_id;
-//    }
-//
-//    public void setType_id(int type_id) {
-//        this.type_id = type_id;
-//    }
-//
-//    public String getType_name() {
-//        return type_name;
-//    }
-//
-//    public void setType_name(String type_name) {
-//        this.type_name = type_name;
-//    }
+    public AttachmentType(String typeName) {
+        this.typeName = typeName;
+    }
 
+    public AttachmentType() {
+    }
 
     public int getTypeId() {
         return typeId;
@@ -44,11 +36,11 @@ public class AttachmentType {
         this.typeName = typeName;
     }
 
-    public List<Attachment> getList() {
-        return list;
+    public List<Attachment> getAttachments() {
+        return attachments;
     }
 
-    public void setList(List<Attachment> list) {
-        this.list = list;
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
     }
 }

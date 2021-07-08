@@ -1,5 +1,6 @@
 package beSen.test.controller;
 
+import beSen.mapper.model.Attachment;
 import beSen.mapper.model.AttachmentType;
 import beSen.mapper.slave.AttachmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author 康盼Java开发工程师
@@ -19,10 +22,16 @@ public class AttachmentController {
     @Autowired
     private AttachmentMapper attachmentMapper;
 
-    @GetMapping("/selectAll")
-    public List<AttachmentType> attachmentTypeList() {
-        return attachmentMapper.selectAll();
-    }
+    private AttachmentType t1 = new AttachmentType("PDF");
+    private AttachmentType t2 = new AttachmentType("JPG");
+
+    private Attachment a1 = new Attachment("43243422","3242.pdf",0);
+    private Attachment a2 = new Attachment("432443","555.pfd",0);
+    private Attachment a3 = new Attachment("G888fds","1.jpg",0);
+    private Attachment a4 = new Attachment("sdf32","2.jpg",0);
+    private Attachment a5 = new Attachment("op343","54.pdf",0);
+
+
 
     /**
      * 劣质的写法: VO 命名不规范 不能以下划线命名 映射不了
@@ -31,82 +40,55 @@ public class AttachmentController {
      */
     @GetMapping("/batchInsert")
     public int batchInsert() {
-//        List<AttachmentType> list = new ArrayList<>();
-//        AttachmentType a1 = new AttachmentType();
-//        a1.setType_name("画册");
-//        AttachmentType a2 = new AttachmentType();
-//        a2.setType_name("图书");
-//        list.add(a1);
-//        list.add(a2);
-//
-//        List<AttachmentType> insertList = new ArrayList<>();
-//        List<AttachmentType> updateList = new ArrayList<>();
-//        List<Integer> deleteList = new ArrayList<>();
-//
-//        List<AttachmentType> result = attachmentMapper.selectAll();
-//        String type_ids = list.stream().filter(e -> e.getType_id() > 0).map(e -> String.valueOf(e.getType_id())).collect(Collectors.joining(","));
-//        if (type_ids != null && !type_ids.isEmpty()) {
-//            deleteList = result.stream().filter(e -> !type_ids.contains(String.valueOf(e.getType_id()))).map(AttachmentType::getType_id).collect(Collectors.toList());
-//        }
-//        for (AttachmentType attachmentType : list) {
-//            if (attachmentType.getType_id() > 0) {
-//                updateList.add(attachmentType);
-//            } else {
-//                insertList.add(attachmentType);
-//            }
-//        }
-//
-//        if (!CollectionUtils.isEmpty(deleteList)) {
-//            attachmentMapper.batchDelete(deleteList);
-//        }
-//        if (!CollectionUtils.isEmpty(insertList)) {
-//            attachmentMapper.batchInsert2(insertList);
-//        }
-//        if (!CollectionUtils.isEmpty(updateList)) {
-//            attachmentMapper.batchUpdate(updateList);
-//        }
+
+        // 第一组数据 新增
+        List<AttachmentType> t_list_1 = new ArrayList<>();
+        List<Attachment> a_list_1 = new ArrayList<>();
+        a_list_1.add(a1);a_list_1.add(a2);
+        List<Attachment> a_list_2 = new ArrayList<>();
+        a_list_2.add(a3);a_list_2.add(a4);
+        t1.setAttachments(a_list_1);t2.setAttachments(a_list_2);
+        t_list_1.add(t1);t_list_1.add(t2);
+
+        attachmentMapper.batchInsert(t_list_1);
+        t1.getAttachments().forEach(ele -> ele.setTypeId(t1.getTypeId()));
+        t2.getAttachments().forEach(ele -> ele.setTypeId(t2.getTypeId()));
+        List<Attachment> attachmentList = t_list_1.stream().flatMap(ele -> ele.getAttachments().stream()).collect(Collectors.toList());
+        attachmentMapper.batchInsertAtt(attachmentList);
+
+        // 第二组数据 删除 和 更新
+        List<AttachmentType> t_list_2 = new ArrayList<>();
+        // t1的附件删除了a1添加了a5, t2的附件已经全部删除了
+        t1.getAttachments().remove(a1);
+        t1.getAttachments().remove(a2);
+        a2.setDocName("更新.pdf");
+        t1.getAttachments().add(a2);
+        t1.getAttachments().add(a5);
+        t2.getAttachments().clear();
+        t_list_2.add(t1);t_list_2.add(t2);
+        // org.apache.ibatis.executor.ExecutorException: No constructor found in 添加无参构造方法
+        List<AttachmentType> searchList = attachmentMapper.selectAttachmentType();
+        // 为新增的附件赋值typeId
+        t1.getAttachments().forEach(ele -> ele.setTypeId(t1.getTypeId()));
+        // 先获取目前有的附件
+        List<Attachment> attachments = t_list_2.stream().flatMap(ele -> ele.getAttachments().stream()).collect(Collectors.toList());
+        // 获取它们的id
+        String nowIds = attachments.stream().filter(ele -> ele.getId() > 0).map(ele -> String.valueOf(ele.getId())).collect(Collectors.joining());
+        // 获取没有id的数据(新增)
+        List<Attachment> insertList = attachments.stream().filter(ele -> ele.getId() == 0).collect(Collectors.toList());
+        if (insertList.size() > 0) {
+            attachmentMapper.batchInsertAtt(insertList);
+        }
+        List<Attachment> deleteList = searchList.stream().flatMap(ele -> ele.getAttachments().stream()).filter(ele -> !nowIds.contains(String.valueOf(ele.getId()))).collect(Collectors.toList());
+        if (deleteList.size() > 0) {
+            attachmentMapper.batchDeleteAtt(deleteList);
+        }
+        List<Attachment> updateList = searchList.stream().flatMap(ele -> ele.getAttachments().stream()).filter(ele -> nowIds.contains(String.valueOf(ele.getId()))).collect(Collectors.toList());
+        if (updateList.size() > 0) {
+            attachmentMapper.batchUpdateAtt(deleteList);
+        }
         return 0;
-    }
 
 
-    /**
-     * 劣质的写法
-     *
-     * @return
-     */
-    @GetMapping("/batchInsert2")
-    public int batchInsert2() {
-        AttachmentType attachmentType1 = attachmentMapper.select("画册");
-        AttachmentType attachmentType2 = attachmentMapper.select("图书");
-//        int type_id1 = attachmentType1.getType_id();
-//        int type_id2 = attachmentType2.getType_id();
-//
-//
-//        List<Attachment> addList1 = new ArrayList<>();
-//        Attachment t1 = new Attachment();
-//        t1.setDoc_id("080980970709");
-//        t1.setDoc_name("梵高.画册1");
-//        t1.setType_id(type_id1);
-//        Attachment t2 = new Attachment();
-//        t2.setDoc_id("660970709");
-//        t2.setDoc_name("梵高.画册2");
-//        t2.setType_id(type_id1);
-//        addList1.add(t1);
-//        addList1.add(t2);
-//
-//        List<Attachment> addList2 = new ArrayList<>();
-//        Attachment tt1 = new Attachment();
-//        tt1.setDoc_id("432432432432424");
-//        tt1.setDoc_name("梵高.图书1");
-//        tt1.setType_id(type_id2);
-//        Attachment tt2 = new Attachment();
-//        tt2.setDoc_id("42342536111");
-//        tt2.setDoc_name("梵高.图书2");
-//        tt2.setType_id(type_id2);
-//        addList2.add(tt1);
-//        addList2.add(tt2);
-//        attachmentMapper.batchInsert3(addList1);
-//        attachmentMapper.batchInsert3(addList2);
-        return 0;
     }
 }

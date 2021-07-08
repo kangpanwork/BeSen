@@ -11,6 +11,15 @@ import java.util.List;
  */
 public interface AttachmentMapper {
     /**
+     * 插入附件类型表 oracle写法 测试
+     *
+     * @param list
+     * @return
+     */
+    int batchInsertTest(List<AttachmentType> list);
+
+
+    /**
      * 插入附件类型表
      *
      * @param list
@@ -19,21 +28,20 @@ public interface AttachmentMapper {
     int batchInsert(List<AttachmentType> list);
 
     /**
-     * 批量插入附件类型表
+     * 插入附件表
      *
      * @param list
      * @return
      */
-    int batchInsert2(List<AttachmentType> list);
+    int batchInsertAtt(List<Attachment> list);
+
 
     /**
-     * 批量插入附件表
+     * 查询附件类型及附件
      *
-     * @param list
      * @return
      */
-    int batchInsert3(List<Attachment> list);
-
+    List<AttachmentType> selectAttachmentType();
 
     /**
      * 根据type_id批量删除附件类型表
@@ -41,38 +49,7 @@ public interface AttachmentMapper {
      * @param list
      * @return
      */
-    int batchDelete(List<Integer> list);
-
-    /**
-     * 查询附件类型表
-     *
-     * @return
-     */
-    List<AttachmentType> selectAll();
-
-    /**
-     * 根据类型查找附件类型表
-     *
-     * @param type_name
-     * @return
-     */
-    AttachmentType select(@Param("type_name")String type_name);
-
-    /**
-     * 根据type_id查询附件
-     *
-     * @param type_id
-     * @return
-     */
-    List<Attachment> selectAll2(int type_id);
-
-    /**
-     * 批量更新附件类型表
-     *
-     * @param list
-     * @return
-     */
-    int batchUpdate(List<AttachmentType> list);
+    int batchDeleteAtt(List<Attachment> list);
 
     /**
      * 批量更新附件表
@@ -80,6 +57,6 @@ public interface AttachmentMapper {
      * @param list
      * @return
      */
-    int batchUpdate2(List<Attachment> list);
+    int batchUpdateAtt(List<Attachment> list);
 
 }
