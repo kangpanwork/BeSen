@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
+/**
+ * @author 康盼Java开发工程师
+ */
 public class SimpleResponse {
 
     private OutputStream outputStream;

@@ -3,6 +3,7 @@ package beSen.aop;
 
 /**
  * 用于 Javassist 创建 class 字节码
+ * @author 康盼Java开发工程师
  */
 public class BsJavassist {
     /**

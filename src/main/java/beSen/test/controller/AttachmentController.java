@@ -91,4 +91,10 @@ public class AttachmentController {
 
 
     }
+
+    @PostMapping("/test")
+    public int test() {
+        return 0;
+    }
+
 }

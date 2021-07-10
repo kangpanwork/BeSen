@@ -59,8 +59,9 @@ public class Tomcat {
                 Class cls = Class.forName(clazzName);
                 // {AttachmentController$$EnhancerByCGLIB$$156a045@7202}
                 Object obj = new CglibAopProxy(null).getProxy(cls,null,null);
-                Method method = cls.getMethod(methodName);
-                method.invoke(obj);
+                Method method = cls.getMethod(methodName,null);
+                Object res = method.invoke(obj);
+                response.write(res.toString());
             } else {
                 String servletName = packageName + "." + className.substring(0, 1).toUpperCase()
                         + className.substring(1) + "Servlet";

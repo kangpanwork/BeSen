@@ -8,6 +8,9 @@ import org.springframework.cglib.proxy.NoOp;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+/**
+ * @author 康盼Java开发工程师
+ */
 public class CglibAopProxy implements AopProxy {
 
     private final AdvisedSupport advisedSupport;
