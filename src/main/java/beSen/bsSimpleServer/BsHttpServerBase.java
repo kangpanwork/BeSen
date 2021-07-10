@@ -4,6 +4,9 @@ import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
 
 
+/**
+ * @author 康盼Java开发工程师
+ */
 public class BsHttpServerBase {
 
 //    此类封装接收的HTTP请求和在一个交换中生成的响应。 它提供了检查来自客户端的请求以及构建和发送响应的方法。
@@ -15,6 +18,7 @@ public class BsHttpServerBase {
 //    getResponseHeaders()设置除content-length之外的任何响应头
 //    sendResponseHeaders(int,long)发送响应头。 必须在下一步之前调用。
 //    getResponseBody()获取OutputStream发送响应正文。 写入响应主体后，必须关闭流以终止交换。
+
     private final HttpExchange httpExchange;
 
     public BsHttpServerBase(HttpExchange httpExchange) {

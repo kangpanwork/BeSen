@@ -18,13 +18,14 @@ import java.io.IOException;
  * 装饰者模式可以有效分离组件，从而提示模块的可维护性并增加模块的复用性。
  * <p>
  * 1.核心组件
+ * @author 康盼Java开发工程师
  */
 public class SimpleServlet implements Servlet {
 
     public void doGet(SimpleRequest request, SimpleResponse response) {
         try {
 
-            response.write("中文乱码" + request.getUrl());
+            response.write(request.getUrl());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -33,7 +34,7 @@ public class SimpleServlet implements Servlet {
 
     public void doPost(SimpleRequest request, SimpleResponse response) {
         try {
-            response.write("中文乱码" + request.getUrl());
+            response.write(request.getUrl());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -73,8 +73,15 @@
         </foreach>
     </delete>
 
+    <delete id="batchDelete" parameterType="java.util.List">
+        delete from t_attachment_type where type_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.typeId}
+        </foreach>
+    </delete>
+
     <update id="batchUpdateAtt" parameterType="java.util.List">
-        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+        <foreach collection="list" item="item" index="index">
             update t_attachment t
             <set>
                 <if test="item.docId != null and item.docId != ''">
@@ -82,6 +89,18 @@
                 </if>
                 <if test="item.docName != null and item.docName != ''">
                     t.doc_name = #{item.docName, jdbcType=VARCHAR}
+                </if>
+            </set>
+            where t.id = #{item.id};
+        </foreach>
+    </update>
+
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index">
+            update t_attachment_type t
+            <set>
+                <if test="item.typeName != null and item.typeName != ''">
+                    t.type_name = #{item.typeName, jdbcType=VARCHAR}
                 </if>
             </set>
             where t.type_id = #{item.typeId};

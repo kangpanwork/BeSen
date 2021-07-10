@@ -44,12 +44,20 @@ public interface AttachmentMapper {
     List<AttachmentType> selectAttachmentType();
 
     /**
-     * 根据type_id批量删除附件类型表
+     * 根据type_id批量删除附件表
      *
      * @param list
      * @return
      */
     int batchDeleteAtt(List<Attachment> list);
+
+    /**
+     * 根据type_id批量删除附件类型表
+     *
+     * @param list
+     * @return
+     */
+    int batchDelete(List<AttachmentType> list);
 
     /**
      * 批量更新附件表
@@ -58,5 +66,14 @@ public interface AttachmentMapper {
      * @return
      */
     int batchUpdateAtt(List<Attachment> list);
+
+
+    /**
+     * 批量更新附件类型表
+     *
+     * @param list
+     * @return
+     */
+    int batchUpdate(List<AttachmentType> list);
 
 }

@@ -9,6 +9,7 @@ import java.net.InetSocketAddress;
 /**
  * Oracle JDK提供了一个简单的Http服务端类，叫做HttpServer，当然它是sun的私有包，位于com.sun.net.httpserver
  * 用于在不引入Tomcat、Jetty等容器的情况下，实现简单的Http请求处理
+ * @author 康盼Java开发工程师
  */
 public class BsSimpleServer {
 
