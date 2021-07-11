@@ -11,6 +11,8 @@ import org.apache.http.HttpStatus;
 import sun.misc.IOUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Locale;
 
 
@@ -35,7 +37,7 @@ public class RpcServer {
     public RpcServer(int port) throws Exception{
         // 实例化 net
         this.net = new HttpTransportServer();
-        this.net.init(port,handler);
+        this.net.init(port,this.handler2);
         // 实例化 service
         this.serviceManager = new ServiceManager();
     }
@@ -77,5 +79,27 @@ public class RpcServer {
         }
     };
 
+    private RequestHandler handler2 = new RequestHandler() {
+        @Override
+        public void onRequest(InputStream inputStream, OutputStream outputStream) {
+            Response response = new Response();
+            try {
+                byte[] bytes = IOUtils.readFully(inputStream, inputStream.available(), true);
+                Request request = JSON.parseObject(bytes, Request.class);
+                ServiceInstance sis = serviceManager.lookup(request);
+                Object invoke =  ReflectUtils.invoke(sis.getTarget(),sis.getMethod(),request.getParameters());
+                response.setData(invoke);
+            } catch (Exception e) {
+                response.setCode(HttpStatus.SC_BAD_REQUEST);
+                response.setMessage("RpcServer get Error: " + e.getClass().getName() + "\n :" + e.getMessage());
+            } finally {
+                byte[] encode = JSON.toJSONBytes(response);
+                try {
+                    outputStream.write(encode);
+                } catch (IOException e) {
+                }
+            }
+        }
+    };
 
 }

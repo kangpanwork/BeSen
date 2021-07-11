@@ -1,10 +1,9 @@
 package beSen.rpc.proto;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -70,6 +69,23 @@ public class ServiceDescriptor {
                 ", returnType='" + returnType + '\'' +
                 ", parameterTypes=" + Arrays.toString(parameterTypes) +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ServiceDescriptor that = (ServiceDescriptor) o;
+        return Objects.equals(this.toString(), that.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 
     /**
