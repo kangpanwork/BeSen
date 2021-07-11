@@ -1,4 +1,4 @@
-package codec;
+package beSen.coderc;
 
 /**
  * 反序列化 ：二进制数组转对象

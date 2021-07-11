@@ -1,4 +1,4 @@
-package codec;
+package beSen.coderc;
 
 /**
  * 序列化 ：对象转化为二进制数组

@@ -1,4 +1,4 @@
-package reflect;
+package beSen.reflect;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -6,12 +6,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 /**
  * 反射工具类
  *
  * @author 康盼Java开发工程师
  */
-public class SimpleReflectUtils {
+public class ReflectUtils {
 
     /**
      * 根据class创建对象

@@ -7,5 +7,28 @@ package beSen.rpc.proto;
  */
 public class Request {
 
+    /**
+     * 请求描述
+     */
+    private ServiceDescriptor serviceDescriptor;
+    /**
+     * 请求参数
+     */
+    private Object[] parameters;
 
+    public ServiceDescriptor getServiceDescriptor() {
+        return serviceDescriptor;
+    }
+
+    public void setServiceDescriptor(ServiceDescriptor serviceDescriptor) {
+        this.serviceDescriptor = serviceDescriptor;
+    }
+
+    public Object[] getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Object[] parameters) {
+        this.parameters = parameters;
+    }
 }
