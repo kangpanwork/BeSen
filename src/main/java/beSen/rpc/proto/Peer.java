@@ -40,4 +40,12 @@ public class Peer {
     public void setPort(int port) {
         this.port = port;
     }
+
+    @Override
+    public String toString() {
+        return "Peer{" +
+                "host='" + host + '\'' +
+                ", port=" + port +
+                '}';
+    }
 }

@@ -42,4 +42,12 @@ public class ServiceInstance {
 
     public ServiceInstance() {
     }
+
+    @Override
+    public String toString() {
+        return "ServiceInstance{" +
+                "target=" + target +
+                ", method=" + method +
+                '}';
+    }
 }

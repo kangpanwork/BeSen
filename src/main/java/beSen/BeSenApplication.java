@@ -17,21 +17,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class BeSenApplication implements ApplicationRunner {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         SpringApplication.run(BeSenApplication.class, args);
-        RpcServer server = new RpcServer();
-        server.register(CalcService.class, new CalcServiceImpl());
-        server.start();
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-//        Tomcat tomcat = new Tomcat(9876);
-//        tomcat.start();
-        RpcClient client = new RpcClient();
-        CalcService proxy = client.getProxy(CalcService.class);
-        int add = proxy.add(1, 2);
-        int minus = proxy.minus(1, 2);
-        System.out.println(add + "||" + minus);
+        Tomcat tomcat = new Tomcat(9876);
+        tomcat.start();
     }
 }

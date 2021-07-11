@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -84,9 +85,9 @@ public class ServiceDescriptor {
         serviceDescriptor.setMethod(method.getName());
         serviceDescriptor.setReturnType(method.getReturnType().getName());
         Class<?>[] parameterTypes = method.getParameterTypes();
-        List<String> types = Arrays.stream(parameterTypes).map(type -> type.getName()).collect(Collectors.toList());
-        String[] strParameterTypes =types.toArray(new String[0]);
+        String[] strParameterTypes = Arrays.stream(parameterTypes).map(type -> type.getName()).collect(Collectors.toList()).toArray(new String[0]);
         serviceDescriptor.setParameterTypes(strParameterTypes);
+        System.out.println(String.format(Locale.ROOT,"serviceDescriptor:{%s}",serviceDescriptor));
         return serviceDescriptor;
     }
 }

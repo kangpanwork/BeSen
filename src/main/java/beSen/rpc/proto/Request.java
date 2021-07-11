@@ -1,5 +1,7 @@
 package beSen.rpc.proto;
 
+import java.util.Arrays;
+
 /**
  * 表示一个RPC请求
  *
@@ -30,5 +32,13 @@ public class Request {
 
     public void setParameters(Object[] parameters) {
         this.parameters = parameters;
+    }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "serviceDescriptor=" + serviceDescriptor +
+                ", parameters=" + Arrays.toString(parameters) +
+                '}';
     }
 }

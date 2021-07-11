@@ -29,12 +29,10 @@ public class HttpTransportClient implements TransportClient {
     @Override
     public InputStream write(InputStream inputStream) throws Exception {
         HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
-        httpURLConnection.setRequestMethod("POST");
-        httpURLConnection.setConnectTimeout(3000);
-        httpURLConnection.setReadTimeout(3000);
         httpURLConnection.setDoInput(true);
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setUseCaches(false);
+        httpURLConnection.setRequestMethod("POST");
         httpURLConnection.connect();
 
         OutputStream outputStream = httpURLConnection.getOutputStream();
@@ -43,6 +41,7 @@ public class HttpTransportClient implements TransportClient {
         while (EOF != (n = inputStream.read(buffer))) {
             outputStream.write(buffer,0,n);
         }
+        // {"parameters":[1,2],"serviceDescriptor":{"clazz":"beSen.rpc.example.CalcService","method":"add","parameterTypes":["int","int"],"returnType":"int"}}
         int responseCode = httpURLConnection.getResponseCode();
         if (HttpURLConnection.HTTP_OK == responseCode) {
             return httpURLConnection.getInputStream();

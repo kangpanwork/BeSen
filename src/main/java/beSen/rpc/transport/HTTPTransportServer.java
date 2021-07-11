@@ -44,9 +44,10 @@ public class HttpTransportServer implements TransportServer {
         server.stop();
     }
 
-    class RequestServlet extends HttpServlet {
+    private class RequestServlet extends HttpServlet {
         @Override
         protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+            System.out.println("client connect!!!");
             InputStream inputStream = req.getInputStream();
             OutputStream outputStream = resp.getOutputStream();
             if (requestHandler != null) {

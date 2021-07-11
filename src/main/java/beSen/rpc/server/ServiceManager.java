@@ -31,16 +31,25 @@ public class ServiceManager {
      * @param <T>
      */
     public <T> void register(Class<T> interfaceClass, T bean) {
+        System.out.println("begin register...");
         Method[] methods = ReflectUtils.getPublicMethods(interfaceClass);
         Arrays.stream(methods).forEach(method -> {
             ServiceDescriptor key = ServiceDescriptor.from(interfaceClass,method);
             ServiceInstance value = new ServiceInstance(bean,method);
             services.put(key,value);
-            System.out.println(String.format(Locale.ROOT,"register service: {} {}",key.getClazz(), key.getMethod()));
+            System.out.println(String.format(Locale.ROOT,"register service: {%s} {%s}",key.getClazz(), key.getMethod()));
         });
     }
 
     public ServiceInstance lookup(Request request) {
         return services.get(request.getServiceDescriptor());
+    }
+
+    public Map<ServiceDescriptor, ServiceInstance> getServices() {
+        return services;
+    }
+
+    public void setServices(Map<ServiceDescriptor, ServiceInstance> services) {
+        this.services = services;
     }
 }
