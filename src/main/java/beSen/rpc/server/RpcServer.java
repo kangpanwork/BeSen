@@ -37,7 +37,7 @@ public class RpcServer {
     public RpcServer(int port) throws Exception{
         // 实例化 net
         this.net = new HttpTransportServer();
-        this.net.init(port,this.handler2);
+        this.net.init(port,this.handler);
         // 实例化 service
         this.serviceManager = new ServiceManager();
     }
@@ -54,7 +54,7 @@ public class RpcServer {
         this.net.stop();
     }
 
-    private RequestHandler handler = (inputStream, outputStream) -> {
+    private RequestHandler handlerFunction = (inputStream, outputStream) -> {
         Response response = new Response();
         try {
             byte[] bytes = IOUtils.readFully(inputStream, inputStream.available(), true);
@@ -79,7 +79,7 @@ public class RpcServer {
         }
     };
 
-    private RequestHandler handler2 = new RequestHandler() {
+    private RequestHandler handler = new RequestHandler() {
         @Override
         public void onRequest(InputStream inputStream, OutputStream outputStream) {
             Response response = new Response();

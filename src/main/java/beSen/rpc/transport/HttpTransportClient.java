@@ -36,16 +36,16 @@ public class HttpTransportClient implements TransportClient {
         httpURLConnection.setRequestMethod("POST");
 
         httpURLConnection.connect();
+        // 作用类型下面代码
         IOUtils.copy(inputStream, httpURLConnection.getOutputStream());
 
-//        OutputStream outputStream = httpURLConnection.getOutputStream();
-//        int n;
-//        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-//        while (EOF != (n = inputStream.read(buffer))) {
-//            outputStream.write(buffer,0,n);
-//        }
+        OutputStream outputStream = httpURLConnection.getOutputStream();
+        int n;
+        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        while (EOF != (n = inputStream.read(buffer))) {
+            outputStream.write(buffer,0,n);
+        }
 
-        // {"parameters":[1,2],"serviceDescriptor":{"clazz":"beSen.rpc.example.CalcService","method":"add","parameterTypes":["int","int"],"returnType":"int"}}
         int responseCode = httpURLConnection.getResponseCode();
         if (HttpURLConnection.HTTP_OK == responseCode) {
             return httpURLConnection.getInputStream();

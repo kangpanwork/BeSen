@@ -53,6 +53,7 @@ public class RpcClient {
             Request request = new Request();
             request.setServiceDescriptor(ServiceDescriptor.from(clazz,method));
             request.setParameters(args);
+
             Response response = remoteInvoke(request);
             System.out.println(String.format(Locale.ROOT,"response:{%s}" ,response));
             if (response != null && HttpStatus.OK_200 == response.getCode()) {

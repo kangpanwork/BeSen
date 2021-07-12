@@ -29,7 +29,7 @@ public class RandomTransportSelector implements TransportSelector {
         //count取大于等于1的
         count = Math.max(count, 1);
         for (Peer peer : peers) {
-            for (int i = 0; i < count; ++i) {
+            for (int i = 0; i < count; i++) {
                 TransportClient transportClient = new HttpTransportClient();
                 transportClient.connect(peer);
                 clients.add(transportClient);
