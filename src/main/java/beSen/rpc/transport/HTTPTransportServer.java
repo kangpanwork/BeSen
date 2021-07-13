@@ -28,9 +28,10 @@ public class HttpTransportServer implements TransportServer {
         this.server = new Server(port);
         // servlet 接收请求，拦截 /* 路径，将输入流转换输出流
         ServletContextHandler servletContextHandler = new ServletContextHandler();
-        server.setHandler(servletContextHandler);
         ServletHolder servletHolder = new ServletHolder(new RequestServlet());
         servletContextHandler.addServlet(servletHolder,"/*");
+        server.setHandler(servletContextHandler);
+
     }
 
     @Override

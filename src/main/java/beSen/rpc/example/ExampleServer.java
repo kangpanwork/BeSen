@@ -1,19 +1,23 @@
 package beSen.rpc.example;
 
-import com.jayway.jsonpath.web.resource.ApiResource;
-import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Handler;
+
+import beSen.rpc.transport.HttpTransportServer;
+import beSen.rpc.transport.RequestHandler;
+
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.handler.HandlerList;
+
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.webapp.WebAppContext;
-import org.glassfish.jersey.jackson.JacksonFeature;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.servlet.ServletContainer;
 
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 
 /**
  * @author 康盼Java开发工程师
@@ -21,55 +25,43 @@ import java.io.IOException;
 public class ExampleServer {
     public static void main(String[] args) throws Exception {
         String configPort = "8080";
-        if(args.length > 0){
-            configPort = args[0];
-        }
-
         String port = System.getProperty("server.http.port", configPort);
         System.out.println("Server started on port: " + port);
 
-        Server server = new Server();
+        Server server = new Server(8080);
+        ServletContextHandler servletContextHandler = new ServletContextHandler();
+        server.setHandler(servletContextHandler);
 
-        server.setConnectors(new Connector[]{createConnector(server, Integer.parseInt(port))});
-
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
-        context.setContextPath("/api");
-        ServletHolder servletHolder = new ServletHolder(createJerseyServlet());
-        servletHolder.setInitOrder(1);
-        context.addServlet(servletHolder, "/*");
-
-        WebAppContext webAppContext = new WebAppContext();
-        webAppContext.setServer(server);
-        webAppContext.setContextPath("/");
-
-        String resourceBase = System.getProperty("resourceBase");
-        if(resourceBase != null){
-            webAppContext.setResourceBase(resourceBase);
-        } else {
-            webAppContext.setResourceBase(ExampleServer.class.getResource("/webapp").toExternalForm());
-        }
-
-        HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{context, webAppContext});
-        server.setHandler(handlers);
-
+        ServletHolder servletHolder = new ServletHolder(new RequestServlet());
+        servletContextHandler.addServlet(servletHolder, "/*");
         server.start();
         server.join();
     }
 
-    private static ServerConnector createConnector(Server s, int port){
-        ServerConnector connector = new ServerConnector(s);
-        connector.setHost("0.0.0.0");
-        connector.setPort(port);
-        return connector;
+
+}
+
+
+class RequestServlet extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        System.out.println("client connect!!!");
+        InputStream inputStream = req.getInputStream();
+        OutputStream outputStream = resp.getOutputStream();
+        requestHandler.onRequest(inputStream, outputStream);
+        outputStream.flush();
     }
 
-    private static ServletContainer createJerseyServlet() throws IOException {
-        ResourceConfig resourceConfig = new ResourceConfig();
-        resourceConfig.register(JacksonFeature.class);
-
-        resourceConfig.register(new ApiResource());
-
-        return new ServletContainer(resourceConfig);
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doGet(req, resp);
+        System.out.println("-----");
     }
+
+    private RequestHandler requestHandler = new RequestHandler() {
+        @Override
+        public void onRequest(InputStream inputStream, OutputStream outputStream) {
+
+        }
+    };
 }
