@@ -7,6 +7,7 @@ import java.io.OutputStream;
  * @author 康盼Java开发工程师
  * @FunctionalInterface
  */
+@FunctionalInterface
 public interface RequestHandler {
 
     /**

@@ -1,13 +1,15 @@
 package beSen.rpc.example;
 
 
-import beSen.rpc.transport.HttpTransportServer;
+import beSen.reflect.ReflectUtils;
 import beSen.rpc.transport.RequestHandler;
 
+import com.alibaba.fastjson.JSON;
 import org.eclipse.jetty.server.Server;
 
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import sun.misc.IOUtils;
 
 
 import javax.servlet.ServletException;
@@ -54,14 +56,21 @@ class RequestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
-        System.out.println("-----");
+        System.out.println("client connect!!!");
+        InputStream inputStream = req.getInputStream();
+        OutputStream outputStream = resp.getOutputStream();
+        requestHandler.onRequest(inputStream, outputStream);
+        outputStream.flush();
     }
 
-    private RequestHandler requestHandler = new RequestHandler() {
-        @Override
-        public void onRequest(InputStream inputStream, OutputStream outputStream) {
-
+    private RequestHandler requestHandler = (inputStream,outputStream) -> {
+        try {
+            byte[] bytes = IOUtils.readFully(inputStream, inputStream.available(), true);
+            RestServiceInfo rest = JSON.parseObject(bytes,RestServiceInfo.class);
+            Object obj = ReflectUtils.invoke(rest.getTarget(),rest.getMethod(),rest.getArgs());
+            byte[] message = JSON.toJSONBytes(obj);
+            outputStream.write(message);
+        } catch (Exception e) {
         }
     };
 }

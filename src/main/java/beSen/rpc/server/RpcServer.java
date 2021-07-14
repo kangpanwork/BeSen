@@ -59,12 +59,10 @@ public class RpcServer {
         try {
             byte[] bytes = IOUtils.readFully(inputStream, inputStream.available(), true);
             Request request = JSON.parseObject(bytes,Request.class);
-            System.out.println(String.format(Locale.ROOT,"Get Request: {%s}",request));
             serviceManager.getServices().forEach((k,v) -> {
                 System.out.println("registerMap:" + k + " : " + v);
             });
             ServiceInstance serviceInstance = serviceManager.lookup(request);
-            System.out.println(String.format(Locale.ROOT,"serviceInstance:{%s}" ,serviceInstance.toString()));
             Object obj = ReflectUtils.invoke(serviceInstance.getTarget(),serviceInstance.getMethod(),request.getParameters());
             response.setData(obj);
         } catch (Exception e) {
