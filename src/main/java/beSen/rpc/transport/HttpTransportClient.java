@@ -39,8 +39,8 @@ public class HttpTransportClient implements TransportClient {
         httpURLConnection.setRequestMethod("POST");
         httpURLConnection.connect();
 
-        // 或者用IOUtils.copy
         OutputStream outputStream = httpURLConnection.getOutputStream();
+        // 或者用IOUtils.copy
         int n;
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         while (EOF != (n = inputStream.read(buffer))) {
