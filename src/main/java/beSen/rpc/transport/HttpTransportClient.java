@@ -1,7 +1,6 @@
 package beSen.rpc.transport;
 
 import beSen.rpc.proto.Peer;
-import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,7 +23,7 @@ public class HttpTransportClient implements TransportClient {
 
     @Override
     public void connect(Peer peer) {
-        this.url = "http://" + peer.getHost() + ":"  + peer.getPort();
+        this.url = "http://" + peer.getHost() + ":" + peer.getPort();
     }
 
     @Override
@@ -32,8 +31,6 @@ public class HttpTransportClient implements TransportClient {
         HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
         // 设置是否从httpUrlConnection读入，默认情况下是true
         httpURLConnection.setDoInput(true);
-        // 设置是否向httpUrlConnection输出，因为这个是post请求，参数要放在
-        // http正文内，因此需要设为true, 默认情况下是false;
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setUseCaches(false);
         httpURLConnection.setRequestMethod("POST");
@@ -44,7 +41,7 @@ public class HttpTransportClient implements TransportClient {
         int n;
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         while (EOF != (n = inputStream.read(buffer))) {
-            outputStream.write(buffer,0,n);
+            outputStream.write(buffer, 0, n);
         }
 
         int responseCode = httpURLConnection.getResponseCode();

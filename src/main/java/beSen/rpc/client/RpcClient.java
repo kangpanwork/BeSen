@@ -16,7 +16,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Rpc 客户端
@@ -53,9 +52,7 @@ public class RpcClient {
             Request request = new Request();
             request.setServiceDescriptor(ServiceDescriptor.from(clazz,method));
             request.setParameters(args);
-
             Response response = remoteInvoke(request);
-            System.out.println(String.format(Locale.ROOT,"response:{%s}" ,response));
             if (response != null && HttpStatus.OK_200 == response.getCode()) {
                return response.getData();
             } else {

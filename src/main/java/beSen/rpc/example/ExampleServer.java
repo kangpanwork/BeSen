@@ -1,7 +1,6 @@
 package beSen.rpc.example;
 
 
-import beSen.reflect.ReflectUtils;
 import beSen.rpc.transport.RequestHandler;
 
 import com.alibaba.fastjson.JSON;
@@ -19,6 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Optional;
 
 
 /**
@@ -29,7 +31,6 @@ public class ExampleServer {
         String configPort = "8080";
         String port = System.getProperty("server.http.port", configPort);
         System.out.println("Server started on port: " + port);
-
         Server server = new Server(8080);
         ServletContextHandler servletContextHandler = new ServletContextHandler();
         server.setHandler(servletContextHandler);
@@ -63,13 +64,28 @@ class RequestServlet extends HttpServlet {
         outputStream.flush();
     }
 
+    /**
+     * 处理httpURLConnection.getOutputStream()的输出流对应HttpServletRequest的输入流
+     */
     private RequestHandler requestHandler = (inputStream,outputStream) -> {
         try {
             byte[] bytes = IOUtils.readFully(inputStream, inputStream.available(), true);
             RestServiceInfo rest = JSON.parseObject(bytes,RestServiceInfo.class);
-            Object obj = ReflectUtils.invoke(rest.getTarget(),rest.getMethod(),rest.getArgs());
-            byte[] message = JSON.toJSONBytes(obj);
-            outputStream.write(message);
+            String className = rest.getClazz();
+            Class clazz = Class.forName(className);
+            Optional op = Arrays.stream(clazz.getDeclaredMethods()).filter(method ->
+                method.getName().equals(rest.getMethod())
+            ).findFirst();
+            if (op.isPresent()) {
+                Object target = ServiceEnum.getTarget(className);
+                Method method = (Method)op.get();
+                Object result = method.invoke(target,rest.getArgs());
+                byte[] message = JSON.toJSONBytes(result);
+                outputStream.write(message);
+            } else {
+                outputStream.write(String.valueOf(0).getBytes());
+            }
+
         } catch (Exception e) {
         }
     };

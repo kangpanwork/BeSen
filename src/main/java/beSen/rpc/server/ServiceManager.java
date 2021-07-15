@@ -31,7 +31,6 @@ public class ServiceManager {
      * @param <T>
      */
     public <T> void register(Class<T> interfaceClass, T bean) {
-        System.out.println("begin register...");
         Method[] methods = ReflectUtils.getPublicMethods(interfaceClass);
         Arrays.stream(methods).forEach(method -> {
             ServiceDescriptor key = ServiceDescriptor.from(interfaceClass,method);

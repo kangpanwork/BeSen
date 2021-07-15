@@ -1,7 +1,6 @@
 package beSen.rpc.example;
 
 
-import beSen.rpc.proto.Response;
 import com.alibaba.fastjson.JSON;
 import sun.misc.IOUtils;
 
@@ -15,12 +14,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
+ * 客户端 向服务端写一个RestServiceInfo
+ * 服务端拿到RestServiceInfo去调用
+ *
  * @author 康盼Java开发工程师
  */
 public class ExampleClient {
 
     public static void main(String[] args) throws Exception {
-        CalcService calcService = (CalcService) Proxy.newProxyInstance(ExampleClient.class.getClassLoader(),new Class[]{CalcService.class},new RemoteHandler());
+        CalcService calcService = (CalcService) Proxy.newProxyInstance(CalcService.class.getClassLoader(),new Class[]{CalcService.class},new RemoteHandler());
         int sum = calcService.add(1,2);
         System.out.println(sum);
     }
@@ -28,20 +30,20 @@ public class ExampleClient {
 class RemoteHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        RestServiceInfo restInfo = new RestServiceInfo(proxy,method,args);
+        RestServiceInfo restInfo = new RestServiceInfo();
+        restInfo.setClazz(CalcService.class.getName());
+        restInfo.setMethod(method.getName());
+        restInfo.setArgs(args);
         byte[] bytes = JSON.toJSONBytes(restInfo);
         InputStream inputStream = new ByteArrayInputStream(bytes);
         String url = "http://" + "127.0.0.1" + ":"  + "8080";
         HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
         // 设置是否从httpUrlConnection读入，默认情况下是true
         httpURLConnection.setDoInput(true);
-        // 设置是否向httpUrlConnection输出，因为这个是post请求，参数要放在
-        // http正文内，因此需要设为true, 默认情况下是false;
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setUseCaches(false);
         httpURLConnection.setRequestMethod("POST");
         httpURLConnection.connect();
-        httpURLConnection.setRequestProperty("Connection", "Keep-Alive");
         // 此处getOutputStream会隐含的进行connect
         // 把对象字节转换inputStream,然后向此连接写入的输出流，
         OutputStream outputStream = httpURLConnection.getOutputStream();

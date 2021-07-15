@@ -9,32 +9,26 @@ import java.lang.reflect.Method;
  */
 public class RestServiceInfo {
 
-    private Object target;
-    private Method method;
+    private String clazz;
+    private String method;
     private Object[] args;
 
     public RestServiceInfo() {
     }
 
-    public RestServiceInfo(Object target, Method method, Object[] args) {
-        this.target = target;
-        this.method = method;
-        this.args = args;
+    public String getClazz() {
+        return clazz;
     }
 
-    public Object getTarget() {
-        return target;
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
     }
 
-    public void setTarget(Object target) {
-        this.target = target;
-    }
-
-    public Method getMethod() {
+    public String getMethod() {
         return method;
     }
 
-    public void setMethod(Method method) {
+    public void setMethod(String method) {
         this.method = method;
     }
 

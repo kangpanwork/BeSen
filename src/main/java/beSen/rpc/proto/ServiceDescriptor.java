@@ -2,7 +2,6 @@ package beSen.rpc.proto;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -103,7 +102,6 @@ public class ServiceDescriptor {
         Class<?>[] parameterTypes = method.getParameterTypes();
         String[] strParameterTypes = Arrays.stream(parameterTypes).map(type -> type.getName()).collect(Collectors.toList()).toArray(new String[0]);
         serviceDescriptor.setParameterTypes(strParameterTypes);
-        System.out.println(String.format(Locale.ROOT,"serviceDescriptor:{%s}",serviceDescriptor));
         return serviceDescriptor;
     }
 }

@@ -59,9 +59,6 @@ public class RpcServer {
         try {
             byte[] bytes = IOUtils.readFully(inputStream, inputStream.available(), true);
             Request request = JSON.parseObject(bytes,Request.class);
-            serviceManager.getServices().forEach((k,v) -> {
-                System.out.println("registerMap:" + k + " : " + v);
-            });
             ServiceInstance serviceInstance = serviceManager.lookup(request);
             Object obj = ReflectUtils.invoke(serviceInstance.getTarget(),serviceInstance.getMethod(),request.getParameters());
             response.setData(obj);
