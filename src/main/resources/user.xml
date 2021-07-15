@@ -6,6 +6,13 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd
 	 http://besen/schema/user http://besen/schema/user.xsd">
 
+
+<!--    xsi:schemaLocation="-->
+<!--    http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd-->
+<!--    这个从命名可以看出个大概，指定Schema的位置这个属性必须结合命名空间使用。这个属性有两个值，-->
+<!--    第一个值表示需要使用的命名空间。第二个值表示供命名空间使用的 XML schema 的位置-->
+
     <userxml:user id="user" userName="kangpan" email="kangpan_work@163.com"/>
 
 </beans>

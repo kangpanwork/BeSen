@@ -22,6 +22,9 @@ import org.springframework.core.io.Resource;
 
 import java.util.stream.Stream;
 
+/**
+ * @author 康盼Java开发工程师
+ */
 public class BeanTest {
 
     @Test

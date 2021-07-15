@@ -7,10 +7,6 @@ CREATE TABLE t_attachment (
   type_id INT NULL,
   PRIMARY KEY (id));
 
-ALTER TABLE t_attachment
-ADD COLUMN flag VARCHAR(45) NULL AFTER `type_id`,
-ADD COLUMN isDeleted VARCHAR(45) NULL AFTER `flag`;
-
 
 drop table if exists T_ATTACHMENT_TYPE;
 
