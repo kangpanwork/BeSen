@@ -8,17 +8,13 @@ public class ProviderConfig {
     /**
      * 接口
      */
-    private String nozzle;
+    protected String nozzle;
 
     /**
      * 映射
      */
-    private String ref;
+    protected String ref;
 
-    /**
-     * 别名
-     */
-    private String alias;
 
     public String getNozzle() {
         return nozzle;
@@ -36,11 +32,4 @@ public class ProviderConfig {
         this.ref = ref;
     }
 
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
 }

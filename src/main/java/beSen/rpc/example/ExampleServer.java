@@ -1,6 +1,8 @@
 package beSen.rpc.example;
 
 
+import beSen.rpc.spring.bean.ProviderBean;
+import beSen.rpc.spring.bean.ServerBean;
 import beSen.rpc.transport.RequestHandler;
 
 import com.alibaba.fastjson.JSON;
@@ -8,6 +10,8 @@ import org.eclipse.jetty.server.Server;
 
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sun.misc.IOUtils;
 
 
@@ -28,10 +32,10 @@ import java.util.Optional;
  */
 public class ExampleServer {
     public static void main(String[] args) throws Exception {
-        String configPort = "8080";
-        String port = System.getProperty("server.http.port", configPort);
-        System.out.println("Server started on port: " + port);
-        Server server = new Server(8080);
+        String[] configs = {"server.xml"};
+        BeanFactory beanFactory = new ClassPathXmlApplicationContext(configs);
+        ServerBean s = (ServerBean) beanFactory.getBean("server");
+        Server server = new Server(s.getPort());
         ServletContextHandler servletContextHandler = new ServletContextHandler();
         server.setHandler(servletContextHandler);
 
@@ -72,12 +76,16 @@ class RequestServlet extends HttpServlet {
             byte[] bytes = IOUtils.readFully(inputStream, inputStream.available(), true);
             RestServiceInfo rest = JSON.parseObject(bytes,RestServiceInfo.class);
             String className = rest.getClazz();
+            String[] configs = {"provider.xml"};
+            BeanFactory beanFactory = new ClassPathXmlApplicationContext(configs);
+            ProviderBean p = (ProviderBean) beanFactory.getBean("provider");
             Class clazz = Class.forName(className);
             Optional op = Arrays.stream(clazz.getDeclaredMethods()).filter(method ->
                 method.getName().equals(rest.getMethod())
             ).findFirst();
             if (op.isPresent()) {
-                Object target = ServiceEnum.getTarget(className);
+                // 从枚举中获取 Object target = ServiceEnum.getTarget(className);
+                Object target = Class.forName(p.getRef()).newInstance();
                 Method method = (Method)op.get();
                 Object result = method.invoke(target,rest.getArgs());
                 byte[] message = JSON.toJSONBytes(result);

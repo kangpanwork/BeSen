@@ -1,7 +1,11 @@
 package beSen.rpc.example;
 
 
+import beSen.rpc.spring.bean.ProviderBean;
+import beSen.rpc.spring.bean.ServerBean;
 import com.alibaba.fastjson.JSON;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sun.misc.IOUtils;
 
 import java.io.ByteArrayInputStream;
@@ -30,13 +34,17 @@ public class ExampleClient {
 class RemoteHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        String[] configs = {"server.xml","provider.xml"};
+        BeanFactory beanFactory = new ClassPathXmlApplicationContext(configs);
+        ServerBean s = (ServerBean) beanFactory.getBean("server");
+        ProviderBean p = (ProviderBean) beanFactory.getBean("provider");
         RestServiceInfo restInfo = new RestServiceInfo();
-        restInfo.setClazz(CalcService.class.getName());
+        restInfo.setClazz(p.getNozzle());
         restInfo.setMethod(method.getName());
         restInfo.setArgs(args);
         byte[] bytes = JSON.toJSONBytes(restInfo);
         InputStream inputStream = new ByteArrayInputStream(bytes);
-        String url = "http://" + "127.0.0.1" + ":"  + "8080";
+        String url = "http://" + s.getHost() + ":"  + s.getPort();
         HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
         // 设置是否从httpUrlConnection读入，默认情况下是true
         httpURLConnection.setDoInput(true);

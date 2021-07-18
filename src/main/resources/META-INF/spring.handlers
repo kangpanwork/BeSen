@@ -1,1 +1,2 @@
 http\://besen/schema/user=beSen.xsd.design.handler.UserNamespaceHandler
+http\://besen/schema/rpc=beSen.rpc.spring.MyNamespaceHandler

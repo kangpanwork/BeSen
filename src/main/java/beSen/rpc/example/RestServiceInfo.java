@@ -1,6 +1,5 @@
 package beSen.rpc.example;
 
-import java.lang.reflect.Method;
 
 /**
  * 请求服务的信息

@@ -29,17 +29,19 @@ public class MyBeanDefinitionParser implements BeanDefinitionParser {
         parserContext.getRegistry().registerBeanDefinition(beanName, beanDefinition);
 
         for (Method method : beanClass.getMethods()) {
-            if (!isProperty(method, beanClass)) continue;
+            if (!isPropertyMethod(method, beanClass)) {
+                continue;
+            }
             String name = method.getName();
-            String methodName = name.substring(3, 4).toLowerCase() + name.substring(4);
-            String value = element.getAttribute(methodName);
-            beanDefinition.getPropertyValues().addPropertyValue(methodName, value);
+            String propertyName = name.substring(3, 4).toLowerCase() + name.substring(4);
+            String propertyValue = element.getAttribute(propertyName);
+            beanDefinition.getPropertyValues().addPropertyValue(propertyName, propertyValue);
         }
 
         return beanDefinition;
     }
 
-    private boolean isProperty(Method method, Class beanClass) {
+    private boolean isPropertyMethod(Method method, Class beanClass) {
 
         String methodName = method.getName();
         boolean flag = methodName.length() > 3 && methodName.startsWith("set") && Modifier.isPublic(method.getModifiers()) && method.getParameterTypes().length == 1;
