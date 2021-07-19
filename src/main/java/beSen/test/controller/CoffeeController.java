@@ -25,7 +25,7 @@ public class CoffeeController {
 
     /**
      * 测试
-     * {"coffeeDesc":"九折出售","price":100,"state":100,"id":0}
+     * {"coffeeDesc":"九折出售","price":0,"state":0,"id":0}
      *
      * @param coffee
      * @param bindingResult
@@ -34,7 +34,8 @@ public class CoffeeController {
     @PostMapping(path = "/insert",consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity insert(@RequestBody @Valid Coffee coffee, BindingResult bindingResult) {
-        ValidExceptionUtil.checkStringFiledValue(coffee);
+        // 两种校验对比
+        ValidExceptionUtil.validField(coffee);
         ValidExceptionUtil.validation(bindingResult.hasErrors(), bindingResult);
         return ResponseEntity.builder().data(coffee)
                 .time(LocalDateTime.now())

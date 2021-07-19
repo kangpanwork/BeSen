@@ -1,5 +1,7 @@
 package beSen.spring.model;
 
+import beSen.spring.valid.Valid;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -9,19 +11,25 @@ import javax.validation.constraints.Size;
  * @author 康盼Java开发工程师
  */
 public class Coffee extends BaseEntity {
-    //只能作用在 String 上,不能为null, 而且调用trim()后, 长度必须大于0
 
+    /**
+     * 只能作用在 String 上,不能为null, 而且调用trim()后, 长度必须大于0
+     */
+    @Valid
     @NotBlank(message = "name can not be null")
     private String name;
 
     @Max(value = 106, message = "state is not in coffeeState")
     @Min(value = 101, message = "state is not in coffeeState")
+    @Valid
     private int state;
 
     @Min(value = 0, message = "price must be higher or equal to zero")
+    @Valid
     private double price;
 
     @Size(min = 1,max = 200,message = "coffeeDesc length must in 1~200 size")
+    @Valid
     private String coffeeDesc;
 
     public String getName() {

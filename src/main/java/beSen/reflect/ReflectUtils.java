@@ -1,5 +1,12 @@
 package beSen.reflect;
 
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
+import org.springframework.util.MethodInvoker;
+import org.springframework.util.ReflectionUtils;
+
+import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -60,5 +67,49 @@ public class ReflectUtils {
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    /**
+     * setValue
+     *
+     * @param target
+     * @param args
+     * @param fieldName
+     * @throws Exception
+     */
+    public static void setValue(Object target,Object[] args,String fieldName) throws Exception{
+        MethodInvoker methodInvoker = new MethodInvoker();
+        methodInvoker.setTargetObject(target);
+        methodInvoker.setArguments(args);
+        String methodName = "set" + StrUtil.upperFirst(fieldName);
+        methodInvoker.setTargetMethod(methodName);
+        methodInvoker.prepare();
+        methodInvoker.invoke();
+    }
+
+    /**
+     * getValue
+     *
+     * @param target
+     * @param fieldName
+     * @return
+     * @throws Exception
+     */
+    public static Object getValue(Object target,String fieldName) throws Exception {
+        MethodInvoker methodInvoker = new MethodInvoker();
+        methodInvoker.setTargetObject(target);
+        methodInvoker.setTargetClass(target.getClass());
+        String methodName = "get" + StrUtil.upperFirst(fieldName);
+        Field field = target.getClass().getDeclaredField(fieldName);
+        field = ReflectionUtils.findField(target.getClass(),fieldName);
+        methodInvoker.setTargetMethod(methodName);
+        methodInvoker.prepare();
+        Object value = methodInvoker.invoke();
+        // NumberUtil
+        if (value instanceof String && field.getGenericType().equals(String.class)) {
+            return value;
+        }
+        return value;
+
     }
 }
