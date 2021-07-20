@@ -15,6 +15,9 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 
+/**
+ * @author 康盼Java开发工程师
+ */
 public class DynamicProxyTest {
 
     private AdvisedSupport advisedSupport;
