@@ -2,6 +2,9 @@ package beSen.bean.aop;
 
 import beSen.bean.configurable.ConfigurableListableBeanFactory;
 
+/**
+ * @author 康盼Java开发工程师
+ */
 public interface BeanFactoryPostProcessor {
 
     /**
