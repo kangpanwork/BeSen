@@ -4,7 +4,6 @@ package beSen.test.excel;
 import beSen.excel.model.ExcelBackRoundColor;
 import beSen.excel.model.ExcelData;
 import beSen.test.excel.model.People;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -413,6 +412,7 @@ public class ExcelTest {
     public void setDataValidation(String offset, XSSFSheet sheet, int rowNum, int colNum) {
         XSSFDataValidationHelper dvHelper = new XSSFDataValidationHelper(sheet);
         DataValidation data_validation_list;
+        String str = "INDIRECT($" + offset + (rowNum) + ")";
         data_validation_list = getDataValidationByFormula(
                 "INDIRECT($" + offset + (rowNum) + ")", rowNum, colNum, dvHelper);
         sheet.addValidationData(data_validation_list);
@@ -454,7 +454,7 @@ public class ExcelTest {
         // 设置输入信息提示信息
         data_validation_list.createPromptBox("下拉选择提示", "请使用下拉方式选择合适的值！");
         // 设置输入错误提示信息
-        //data_validation_list.createErrorBox("选择错误提示", "你输入的值未在备选列表中，请下拉选择合适的值！");
+        // data_validation_list.createErrorBox("选择错误提示", "你输入的值未在备选列表中，请下拉选择合适的值！");
         return data_validation_list;
     }
 
