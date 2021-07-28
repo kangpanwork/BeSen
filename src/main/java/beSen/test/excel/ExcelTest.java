@@ -369,6 +369,7 @@ public class ExcelTest {
             name.setNameName(key);
             String formula = "area!" + range;
             name.setRefersToFormula(formula);
+            System.out.println(name.getNameName() + ":" +name.getRefersToFormula());
         }
 
         XSSFDataValidationHelper dvHelper = new XSSFDataValidationHelper((XSSFSheet) sheetPro);
@@ -412,7 +413,6 @@ public class ExcelTest {
     public void setDataValidation(String offset, XSSFSheet sheet, int rowNum, int colNum) {
         XSSFDataValidationHelper dvHelper = new XSSFDataValidationHelper(sheet);
         DataValidation data_validation_list;
-        String str = "INDIRECT($" + offset + (rowNum) + ")";
         data_validation_list = getDataValidationByFormula(
                 "INDIRECT($" + offset + (rowNum) + ")", rowNum, colNum, dvHelper);
         sheet.addValidationData(data_validation_list);
@@ -429,6 +429,7 @@ public class ExcelTest {
      */
     private DataValidation getDataValidationByFormula(
             String formulaString, int naturalRowIndex, int naturalColumnIndex, XSSFDataValidationHelper dvHelper) {
+
         // 加载下拉列表内容
         // 举例：若formulaString = "INDIRECT($A$2)" 表示规则数据会从名称管理器中获取key与单元格 A2 值相同的数据，
         //如果A2是江苏省，那么此处就是江苏省下的市信息。
@@ -441,6 +442,7 @@ public class ExcelTest {
         int lastCol = naturalColumnIndex - 1;
         CellRangeAddressList regions = new CellRangeAddressList(firstRow,
                 lastRow, firstCol, lastCol);
+        System.out.println(formulaString + firstRow + lastRow + firstCol + lastCol);
         // 数据有效性对象
         // 绑定
         XSSFDataValidation data_validation_list = (XSSFDataValidation) dvHelper.createValidation(dvConstraint, regions);
