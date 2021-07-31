@@ -8,6 +8,9 @@ import org.aopalliance.intercept.MethodInterceptor;
 
 import java.lang.reflect.Method;
 
+/**
+ * @author 康盼Java开发工程师
+ */
 public class JavassistAopProxy implements AopProxy {
 
     private ProxyFactory proxyFactory;

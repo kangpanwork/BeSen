@@ -4,6 +4,9 @@ package beSen.test.aop;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
+/**
+ * @author 康盼Java开发工程师
+ */
 public class ServiceInterceptor implements MethodInterceptor {
 
     @Override

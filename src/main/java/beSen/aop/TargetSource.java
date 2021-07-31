@@ -2,6 +2,7 @@ package beSen.aop;
 
 /**
  * 被代理对象的封装
+ * @author 康盼Java开发工程师
  */
 public class TargetSource {
     private final Object target;

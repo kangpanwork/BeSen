@@ -1,12 +1,12 @@
 package beSen.pdf.config;
 
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * PDF 模板及字体配置
+ * @author 康盼Java开发工程师
  */
 @Configuration
 @ConfigurationProperties

@@ -10,6 +10,7 @@ import java.lang.reflect.Proxy;
 
 /**
  * JDK动态代理，必须有接口
+ * @author 康盼Java开发工程师
  */
 public class JdkSubclassingInstantiationStrategy implements InstantiationStrategy, InvocationHandler {
 

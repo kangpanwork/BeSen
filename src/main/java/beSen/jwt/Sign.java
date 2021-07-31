@@ -7,6 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -25,9 +26,16 @@ public class Sign {
     private static Map<String, JWTVerifier> verifierMap = new HashMap<String, JWTVerifier>();
     private static Map<String, Algorithm> algorithmMap = new HashMap<String, Algorithm>();
 
-    public static String generateToken(Map<String,Object> target,long time,String... audience) {
+    public static String generateToken(Map<String,String> target,long time,String... audience) {
         // Add a specific Audience ("aud") claim to the Payload.
         JWTCreator.Builder build = JWT.create().withAudience(audience);
+        // 需要在遍历集合的时候对象集合中元素进行删除操作，需要使用iterator的遍历方式，
+        // iterator自带的remove删除方式不会报出异常 ConcurrentModificationException
+        Iterator<Map.Entry<String, String>> iterator = target.entrySet().iterator();
+        while(iterator.hasNext()) {
+            build.withClaim(iterator.next().getKey(),iterator.next().getValue());
+        }
+
         return null;
     }
 

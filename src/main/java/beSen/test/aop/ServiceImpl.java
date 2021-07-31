@@ -1,5 +1,8 @@
 package beSen.test.aop;
 
+/**
+ * @author 康盼Java开发工程师
+ */
 public class ServiceImpl implements IService{
 
     private String name;
