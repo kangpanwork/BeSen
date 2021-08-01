@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
      * @param exception
      * @return
      */
-    @ExceptionHandler({ValidationException.class})
+    @ExceptionHandler({ValidationException.class,RuntimeException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity handleException(Exception exception) {
         printTrace(exception);

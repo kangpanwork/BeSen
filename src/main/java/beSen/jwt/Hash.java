@@ -11,15 +11,13 @@ import java.io.ByteArrayOutputStream;
  */
 public class Hash {
 
-
     public static String encode(String key,String data) {
-        String code = null;
+        String code;
         try{
             Mac mac = Mac.getInstance("HmacSHA256");
             SecretKeySpec secretKeySpec =
                     new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
             mac.init(secretKeySpec);
-            ByteArrayOutputStream byteArrayOutputStream;
             code = Hex.toHexString(mac.doFinal(data.getBytes("UTF-8")));
         } catch(Exception exception) {
             throw new RuntimeException("数据编码错误！！！");

@@ -1,16 +1,19 @@
 package beSen.jwt;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * https://jwt.io/
+ *
  * JWT含有三部分：头部（header）、载荷（payload）、签名（signature）
  * 载荷（payload）
  * 该部分一般存放一些有效的信息。JWT的标准定义包含五个字段：
@@ -23,55 +26,58 @@ import java.util.Map;
  */
 public class Sign {
 
-    private static Map<String, JWTVerifier> verifierMap = new HashMap<String, JWTVerifier>();
-    private static Map<String, Algorithm> algorithmMap = new HashMap<String, Algorithm>();
+    private static Map<String, JWTVerifier> verifierMap = new HashMap<>();
+    private static Map<String, Algorithm> algorithmMap = new HashMap<>();
 
-    public static String generateToken(Map<String,String> target,long time,String... audience) {
+    public static String generateToken(String target
+            , Map<String, String> parameters, long time, String... audience) {
         // Add a specific Audience ("aud") claim to the Payload.
-        JWTCreator.Builder build = JWT.create().withAudience(audience);
-        // 需要在遍历集合的时候对象集合中元素进行删除操作，需要使用iterator的遍历方式，
-        // iterator自带的remove删除方式不会报出异常 ConcurrentModificationException
-        Iterator<Map.Entry<String, String>> iterator = target.entrySet().iterator();
-        while(iterator.hasNext()) {
-            build.withClaim(iterator.next().getKey(),iterator.next().getValue());
-        }
-
-        return null;
+        Algorithm algorithm = getAlgorithm(target);
+        Calendar calendar = new GregorianCalendar();
+        Date date = new Date(System.currentTimeMillis() + time);
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE,1);
+        String token = JWT.create().withAudience(audience)
+                .withClaim("name",parameters.get("name"))
+                .withClaim("age",parameters.get("age"))
+                .withClaim("sex",parameters.get("sex"))
+                .withExpiresAt(calendar.getTime()).sign(algorithm);
+        return token;
     }
 
 
     /**
      * 校验token
      *
-     * @param target 需要校验的字符串
-     * @param token 生成的token
+     * @param target
+     * @param token
      * @return
      */
-    public static DecodedJWT verifyToken(String target, String token) {
+    public static DecodedJWT verifyToken(String token, String target) {
         JWTVerifier verifier = verifierMap.get(token);
         if (verifier == null) {
             synchronized (verifierMap) {
-                verifier = verifierMap.get(token);
+                verifier = verifierMap.get(target);
                 if (verifier == null) {
-                    Algorithm algorithm = getAlgorithm(token);
+                    Algorithm algorithm = getAlgorithm(target);
                     verifier = JWT.require(algorithm).build();
-                    verifierMap.put(token, verifier);
+                    verifierMap.put(target, verifier);
                 }
             }
         }
 
-        DecodedJWT jwt = verifier.verify(target);
+        DecodedJWT jwt = verifier.verify(token);
         return jwt;
     }
 
-    private static Algorithm getAlgorithm(String token) {
-        Algorithm algorithm = algorithmMap.get(token);
+    private static Algorithm getAlgorithm(String target) {
+        Algorithm algorithm = algorithmMap.get(target);
         if (algorithm == null) {
             synchronized (algorithmMap) {
-                algorithm = algorithmMap.get(token);
+                algorithm = algorithmMap.get(target);
                 if (algorithm == null) {
-                    algorithm = Algorithm.HMAC512(token);
-                    algorithmMap.put(token, algorithm);
+                    algorithm = Algorithm.HMAC512(target);
+                    algorithmMap.put(target, algorithm);
                 }
             }
         }

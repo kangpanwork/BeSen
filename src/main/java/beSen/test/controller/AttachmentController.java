@@ -88,13 +88,5 @@ public class AttachmentController {
             attachmentMapper.batchUpdateAtt(updateList);
         }
         return 0;
-
-
     }
-
-    @PostMapping("/test")
-    public int test() {
-        return 0;
-    }
-
 }
