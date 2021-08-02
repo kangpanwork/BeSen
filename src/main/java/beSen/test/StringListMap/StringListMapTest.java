@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -58,4 +59,13 @@ public class StringListMapTest {
               (k,v) -> System.out.println(k + ":" + v)
       );
     }
+
+    /**
+     * 升序去重
+     */
+    @Test
+    public void test5() {
+        list.stream().filter(StringListMap.distinct(People::getAge)).sorted(Comparator.comparing(People::getAge)).forEach(System.out::println);
+    }
+
 }

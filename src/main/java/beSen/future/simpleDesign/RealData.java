@@ -7,17 +7,12 @@ public class RealData implements Data {
 
     protected final String result;
 
-    public RealData(String para) {
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0 ; i < para.length(); i++) {
-            sb.append(para);
-            try {
-                Thread.sleep(100);
-            } catch(InterruptedException e) {
-
-            }
-        }
-        this.result = sb.toString();
+    public RealData(String result) {
+        try {
+            System.out.println("非常耗时的操作");
+            Thread.sleep(2000);
+        } catch (InterruptedException e){}
+        this.result = result;
     }
 
     @Override

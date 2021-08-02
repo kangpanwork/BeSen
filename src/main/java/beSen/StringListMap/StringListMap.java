@@ -1,6 +1,8 @@
 package beSen.StringListMap;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 
 import java.util.ArrayList;
@@ -8,7 +10,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringJoiner;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -186,6 +190,18 @@ public class StringListMap {
      */
     public static Map StringToMap(String separator, String withKeyValueSeparator, CharSequence sequence) {
         return Splitter.on(separator).withKeyValueSeparator(withKeyValueSeparator).split(sequence);
+    }
+
+    /**
+     * 用户集合去重
+     *
+     * @param function
+     * @param <T>
+     * @return
+     */
+    public static <T> Predicate<T> distinct(Function<? super T, Object> function) {
+        Set set = ConcurrentHashMap.newKeySet();
+        return t -> set.add(function.apply(t));
     }
 
 

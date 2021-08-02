@@ -62,4 +62,15 @@ public class People {
         this.age = age;
         this.salary = salary;
     }
+
+    @Override
+    public String toString() {
+        return "People{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", sex='" + sex + '\'' +
+                ", age=" + age +
+                ", salary=" + salary +
+                '}';
+    }
 }
