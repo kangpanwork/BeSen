@@ -12,7 +12,7 @@ public class ControllerService extends  DefaultService implements IControllerSer
     @Override
     public void batchAgreeOrRejectOption(String option) {
         // 一些必填参数校验
-        agreeOrRejectOption(option);
+        batchAgreeAndReject();
         // 组装参数返回前端
     }
 }

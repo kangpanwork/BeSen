@@ -6,7 +6,6 @@ package beSen.test.test;
 public abstract class AbstractService implements IService {
 
     public void agreeOrRejectOption(String option) {
-        agreeAndReject();
         if ("agree".equals(option)) {
             boolean isAllCommit = isAllCommit();
             if (isAllCommit) {
@@ -25,32 +24,16 @@ public abstract class AbstractService implements IService {
     }
 
     /**
-     * 行云关闭当前节点，开启下个节点
+     * 是否全部提交
+     * @return
      */
-    protected abstract void closeCurrentNodeAndOpenNextNodeForYun();
-
+    protected abstract boolean isAllCommit();
 
     /**
      * 是否是第一个同意
      * @return
      */
     protected abstract boolean isFirstCommit();
-
-    /**
-     * 初始化数据
-     */
-    protected abstract void initData();
-
-
-    /**
-     * 开启前一个节点
-     */
-    protected abstract void openPreviousNode();
-
-    /**
-     * 关闭当前节点
-     */
-    protected abstract void closeCurrentNode();
 
     /**
      * 保存流程记录

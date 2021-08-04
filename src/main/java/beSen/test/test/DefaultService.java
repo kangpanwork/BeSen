@@ -21,6 +21,11 @@ public class DefaultService extends AbstractService {
     private ILogCellService logCellService;
 
     @Override
+    public void batchAgreeAndReject() {
+        agreeOrRejectOption("");
+    }
+
+    @Override
     public void agreeAndReject() {
         cellService.agreeAndReject();
     }
@@ -40,18 +45,18 @@ public class DefaultService extends AbstractService {
 
 
     @Override
-    protected void openPreviousNode() {
+    public void openPreviousNode() {
         cellService.updateNode();
     }
 
     @Override
-    protected void closeCurrentNode() {
+    public void closeCurrentNode() {
         cellService.updateNode();
     }
 
 
     @Override
-    protected void closeCurrentNodeAndOpenNextNodeForYun() {
+    public void closeCurrentNodeAndOpenNextNodeForYun() {
         // 行云处理
     }
 
@@ -63,7 +68,7 @@ public class DefaultService extends AbstractService {
     }
 
     @Override
-    protected void initData() {
+    public void initData() {
         cellService.queryInitStartData();
         cellService.batchUpdate();
         cellService.defaultGeneratorData();
