@@ -106,6 +106,22 @@ public class BloomFilter {
         // 将数组索引为1的位置设置为true
         bitset.set(1,true);
         System.out.println(bitset.get(1));
+
+
+//        127.0.0.1:6379> BF.ADD myFilter java
+//        (integer) 1
+//        127.0.0.1:6379> BF.ADD myFilter javaguide
+//        (integer) 1
+//        127.0.0.1:6379> BF.EXISTS myFilter java
+//        (integer) 1
+//        127.0.0.1:6379> BF.EXISTS myFilter javaguide
+//        (integer) 1
+//        127.0.0.1:6379> BF.EXISTS myFilter github
+//        (integer) 0
+        // errorRate count
+        String init = "redis.call('bf.reserve', KEYS[1], ARGV[1], ARGV[2])";
+        String add = "redis.call('bf.add', KEYS[1], ARGV[1])";
+        String isContains = "redis.call('bf.exists', KEYS[1], ARGV[1])";
     }
 
 
