@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
  * @author 康盼Java开发工程师
  */
 @Component
-public class LogCellService implements ILogCellService {
+public class VersionServiceImplV2 implements IVersionService {
     @Override
-    public void saveLog() {
-
+    public String getVersion() {
+        return "V2";
     }
 }
