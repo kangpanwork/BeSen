@@ -17,4 +17,5 @@ import java.lang.annotation.Target;
 @Documented
 @Component
 public @interface Version {
+    String value() default "";
 }
